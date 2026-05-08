@@ -1,1 +1,1 @@
-export { WorkflowsPage as default } from './pages.jsx'
+export { WorkflowsPage as default } from "./pages.jsx";

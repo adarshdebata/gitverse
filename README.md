@@ -13,16 +13,16 @@
 
 ## 🛠️ Tech Stack
 
-| Technology        | Purpose                            |
-|-------------------|------------------------------------|
-| React 18          | UI framework                       |
-| Vite              | Build tool                         |
-| Zustand           | State management                   |
-| React Router v6   | Hash-based routing (GitHub Pages)  |
-| Tailwind CSS      | Utility-first styling              |
-| D3.js             | Data viz utilities                 |
-| IBM Plex Mono     | Terminal/code typography           |
-| Outfit + Manrope  | UI typography                      |
+| Technology       | Purpose                           |
+| ---------------- | --------------------------------- |
+| React 18         | UI framework                      |
+| Vite             | Build tool                        |
+| Zustand          | State management                  |
+| React Router v6  | Hash-based routing (GitHub Pages) |
+| Tailwind CSS     | Utility-first styling             |
+| D3.js            | Data viz utilities                |
+| IBM Plex Mono    | Terminal/code typography          |
+| Outfit + Manrope | UI typography                     |
 
 ## 🚀 Getting Started
 
@@ -99,30 +99,30 @@ CSS custom properties control the entire color system in `src/styles/globals.css
 ```js
 export const COMMANDS = {
   yourCommand: {
-    id: 'yourCommand',
-    name: 'git your-command',
-    emoji: '🔧',
-    category: 'daily',          // daily | advanced | legacy | recovery
-    difficulty: 'intermediate', // beginner | intermediate | advanced
-    danger: 'medium',           // safe | medium | high
+    id: "yourCommand",
+    name: "git your-command",
+    emoji: "🔧",
+    category: "daily", // daily | advanced | legacy | recovery
+    difficulty: "intermediate", // beginner | intermediate | advanced
+    danger: "medium", // safe | medium | high
     deprecated: false,
-    tags: ['tag1', 'tag2'],
-    short: 'One-line description',
-    purpose: 'Full explanation...',
-    syntax: [{ cmd: 'git your-command', desc: 'What it does' }],
-    examples: [{ title: 'Example', code: 'git your-command...' }],
-    when_to_use: ['Scenario 1', 'Scenario 2'],
-    when_not_to_use: ['Anti-pattern 1'],
-    mistakes: ['Common mistake'],
-    safer_alternatives: [{ cmd: 'safer cmd', reason: 'why' }],
-    related: ['add', 'commit'],
-    internals: 'How Git implements this internally...',
-    visualization: 'staging',  // key from VIZ_MAP in CommandDetailPage
-    danger_level: 'medium',
-    recovery: 'How to undo this...',
-    team_workflow: 'How teams use this...',
+    tags: ["tag1", "tag2"],
+    short: "One-line description",
+    purpose: "Full explanation...",
+    syntax: [{ cmd: "git your-command", desc: "What it does" }],
+    examples: [{ title: "Example", code: "git your-command..." }],
+    when_to_use: ["Scenario 1", "Scenario 2"],
+    when_not_to_use: ["Anti-pattern 1"],
+    mistakes: ["Common mistake"],
+    safer_alternatives: [{ cmd: "safer cmd", reason: "why" }],
+    related: ["add", "commit"],
+    internals: "How Git implements this internally...",
+    visualization: "staging", // key from VIZ_MAP in CommandDetailPage
+    danger_level: "medium",
+    recovery: "How to undo this...",
+    team_workflow: "How teams use this...",
   },
-}
+};
 ```
 
 2. The command automatically appears in the index, search, and routing.
@@ -145,14 +145,14 @@ npm run deploy
 
 ## 🏗️ Architecture Decisions
 
-| Decision               | Choice                    | Reason                                           |
-|------------------------|---------------------------|--------------------------------------------------|
-| Routing                | HashRouter                | GitHub Pages static hosting compatibility        |
-| State management       | Zustand                   | Simple, no boilerplate, persistent via middleware|
-| Styling                | Tailwind + CSS vars       | Utility classes + design system flexibility      |
-| Animations             | Pure CSS keyframes        | No Framer Motion dependency, full control        |
-| Commit graphs          | Custom SVG                | No React Flow needed, full animation control     |
-| Content architecture   | JavaScript data objects   | Type-safe, searchable, importable everywhere     |
+| Decision             | Choice                  | Reason                                            |
+| -------------------- | ----------------------- | ------------------------------------------------- |
+| Routing              | HashRouter              | GitHub Pages static hosting compatibility         |
+| State management     | Zustand                 | Simple, no boilerplate, persistent via middleware |
+| Styling              | Tailwind + CSS vars     | Utility classes + design system flexibility       |
+| Animations           | Pure CSS keyframes      | No Framer Motion dependency, full control         |
+| Commit graphs        | Custom SVG              | No React Flow needed, full animation control      |
+| Content architecture | JavaScript data objects | Type-safe, searchable, importable everywhere      |
 
 ## 🎯 Target Audience
 

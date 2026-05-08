@@ -1,109 +1,124 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
-import { useAppStore } from '@/store/useAppStore'
-import { parseCommand } from './terminalEngine'
+import { useRef, useEffect, useState, useCallback } from "react";
+import { useAppStore } from "@/store/useAppStore";
+import { parseCommand } from "./terminalEngine";
 
 const QUICK_CMDS = [
-  'git status',
-  'git log --oneline',
-  'git log --graph',
-  'git reflog',
-  'git branch',
-  'git stash list',
-  'git diff --staged',
-  'git ls-files --stage',
-]
+  "git status",
+  "git log --oneline",
+  "git log --graph",
+  "git reflog",
+  "git branch",
+  "git stash list",
+  "git diff --staged",
+  "git ls-files --stage",
+];
 
 export default function TerminalEmulator() {
-  const {
-    repoState,
-    terminalHistory,
-    appendTerminalLine,
-    clearTerminal,
-    resetRepo,
-    updateRepo,
-  } = useAppStore()
+  const { repoState, terminalHistory, appendTerminalLine, clearTerminal, resetRepo, updateRepo } =
+    useAppStore();
 
-  const [input, setInput]     = useState('')
-  const [histIdx, setHistIdx] = useState(-1)
-  const inputRef  = useRef(null)
-  const bodyRef   = useRef(null)
-  const cmdHistory = terminalHistory.filter(e => e.type === 'command').map(e => e.cmd)
+  const [input, setInput] = useState("");
+  const [histIdx, setHistIdx] = useState(-1);
+  const inputRef = useRef(null);
+  const bodyRef = useRef(null);
+  const cmdHistory = terminalHistory.filter((e) => e.type === "command").map((e) => e.cmd);
 
   // Auto-scroll to bottom
   useEffect(() => {
     if (bodyRef.current) {
-      bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
     }
-  }, [terminalHistory])
+  }, [terminalHistory]);
 
   // Focus input on mount
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [])
+    inputRef.current?.focus();
+  }, []);
 
-  const runCommand = useCallback((cmd) => {
-    const trimmed = cmd.trim()
-    if (!trimmed) return
+  const runCommand = useCallback(
+    (cmd) => {
+      const trimmed = cmd.trim();
+      if (!trimmed) return;
 
-    if (trimmed === 'clear') {
-      clearTerminal()
-      setInput('')
-      return
-    }
+      if (trimmed === "clear") {
+        clearTerminal();
+        setInput("");
+        return;
+      }
 
-    const { output, repoUpdate } = parseCommand(trimmed, repoState)
+      const { output, repoUpdate } = parseCommand(trimmed, repoState);
 
-    appendTerminalLine({ type: 'command', cmd: trimmed, branch: repoState.branch })
-    appendTerminalLine({ type: 'output',  output })
+      appendTerminalLine({ type: "command", cmd: trimmed, branch: repoState.branch });
+      appendTerminalLine({ type: "output", output });
 
-    if (repoUpdate) {
-      updateRepo(repoUpdate)
-    }
+      if (repoUpdate) {
+        updateRepo(repoUpdate);
+      }
 
-    setInput('')
-    setHistIdx(-1)
-  }, [repoState, appendTerminalLine, updateRepo, clearTerminal])
+      setInput("");
+      setHistIdx(-1);
+    },
+    [repoState, appendTerminalLine, updateRepo, clearTerminal]
+  );
 
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      runCommand(input)
-      return
-    }
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (e.key === "Enter") {
+        runCommand(input);
+        return;
+      }
 
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      const newIdx = Math.min(histIdx + 1, cmdHistory.length - 1)
-      setHistIdx(newIdx)
-      setInput(cmdHistory[cmdHistory.length - 1 - newIdx] || '')
-      return
-    }
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const newIdx = Math.min(histIdx + 1, cmdHistory.length - 1);
+        setHistIdx(newIdx);
+        setInput(cmdHistory[cmdHistory.length - 1 - newIdx] || "");
+        return;
+      }
 
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      const newIdx = Math.max(histIdx - 1, -1)
-      setHistIdx(newIdx)
-      setInput(newIdx === -1 ? '' : cmdHistory[cmdHistory.length - 1 - newIdx] || '')
-      return
-    }
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const newIdx = Math.max(histIdx - 1, -1);
+        setHistIdx(newIdx);
+        setInput(newIdx === -1 ? "" : cmdHistory[cmdHistory.length - 1 - newIdx] || "");
+        return;
+      }
 
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      // Basic tab completion
-      const completions = ['git status', 'git add', 'git commit', 'git push', 'git pull',
-        'git branch', 'git switch', 'git stash', 'git reset', 'git revert',
-        'git log', 'git diff', 'git reflog', 'git cherry-pick', 'git rebase', 'git bisect']
-      const match = completions.find(c => c.startsWith(input) && c !== input)
-      if (match) setInput(match)
-      return
-    }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        // Basic tab completion
+        const completions = [
+          "git status",
+          "git add",
+          "git commit",
+          "git push",
+          "git pull",
+          "git branch",
+          "git switch",
+          "git stash",
+          "git reset",
+          "git revert",
+          "git log",
+          "git diff",
+          "git reflog",
+          "git cherry-pick",
+          "git rebase",
+          "git bisect",
+        ];
+        const match = completions.find((c) => c.startsWith(input) && c !== input);
+        if (match) setInput(match);
+        return;
+      }
 
-    if (e.key === 'c' && e.ctrlKey) {
-      e.preventDefault()
-      appendTerminalLine({ type: 'output', output: '<span class="t-warn">^C</span>' })
-      setInput('')
-      return
-    }
-  }, [input, histIdx, cmdHistory, runCommand, appendTerminalLine])
+      if (e.key === "c" && e.ctrlKey) {
+        e.preventDefault();
+        appendTerminalLine({ type: "output", output: '<span class="t-warn">^C</span>' });
+        setInput("");
+        return;
+      }
+    },
+    [input, histIdx, cmdHistory, runCommand, appendTerminalLine]
+  );
 
   return (
     <div className="terminal-root">
@@ -112,13 +127,20 @@ export default function TerminalEmulator() {
         <div className="terminal-dot terminal-dot-red" />
         <div className="terminal-dot terminal-dot-yellow" />
         <div className="terminal-dot terminal-dot-green" />
-        <span style={{ fontFamily: 'IBM Plex Mono', fontSize: 11, color: 'var(--muted)', marginLeft: 8 }}>
+        <span
+          style={{
+            fontFamily: "IBM Plex Mono",
+            fontSize: 11,
+            color: "var(--muted)",
+            marginLeft: 8,
+          }}
+        >
           GitVerse Terminal — {repoState.branch}
         </span>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
+        <div style={{ marginLeft: "auto", display: "flex", gap: 6 }}>
           <button
             className="btn"
-            style={{ padding: '3px 8px', fontSize: 10 }}
+            style={{ padding: "3px 8px", fontSize: 10 }}
             onClick={clearTerminal}
             title="Clear terminal"
           >
@@ -126,7 +148,7 @@ export default function TerminalEmulator() {
           </button>
           <button
             className="btn btn-danger"
-            style={{ padding: '3px 8px', fontSize: 10 }}
+            style={{ padding: "3px 8px", fontSize: 10 }}
             onClick={resetRepo}
             title="Reset repository state"
           >
@@ -136,18 +158,20 @@ export default function TerminalEmulator() {
       </div>
 
       {/* Quick command buttons */}
-      <div style={{
-        padding: '8px 14px',
-        borderBottom: '1px solid var(--border)',
-        display: 'flex',
-        gap: 6,
-        flexWrap: 'wrap',
-      }}>
-        {QUICK_CMDS.map(cmd => (
+      <div
+        style={{
+          padding: "8px 14px",
+          borderBottom: "1px solid var(--border)",
+          display: "flex",
+          gap: 6,
+          flexWrap: "wrap",
+        }}
+      >
+        {QUICK_CMDS.map((cmd) => (
           <button
             key={cmd}
             className="btn"
-            style={{ padding: '3px 10px', fontSize: 10 }}
+            style={{ padding: "3px 10px", fontSize: 10 }}
             onClick={() => runCommand(cmd)}
           >
             {cmd}
@@ -170,53 +194,41 @@ export default function TerminalEmulator() {
         )}
 
         {terminalHistory.map((entry, i) => {
-          if (entry.type === 'command') {
+          if (entry.type === "command") {
             return (
               <div key={i} style={{ marginBottom: 2 }}>
-                <span className="t-prompt">dev@gitverse</span>
-                {' '}
-                <span className="t-path">~/project</span>
-                {' '}
-                <span className="t-prompt">(</span>
+                <span className="t-prompt">dev@gitverse</span>{" "}
+                <span className="t-path">~/project</span> <span className="t-prompt">(</span>
                 <span className="t-branch">{entry.branch}</span>
-                <span className="t-prompt">)</span>
-                {' '}
-                <span className="t-prompt">$</span>
-                {' '}
+                <span className="t-prompt">)</span> <span className="t-prompt">$</span>{" "}
                 <span className="t-cmd">{entry.cmd}</span>
               </div>
-            )
+            );
           }
 
-          if (entry.type === 'output') {
+          if (entry.type === "output") {
             return (
               <div
                 key={i}
                 style={{ marginBottom: 8, paddingLeft: 2 }}
                 dangerouslySetInnerHTML={{ __html: entry.output }}
               />
-            )
+            );
           }
 
-          return null
+          return null;
         })}
 
         {/* Current input line */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span className="t-prompt">dev@gitverse</span>
-          {' '}
-          <span className="t-path">~/project</span>
-          {' '}
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span className="t-prompt">dev@gitverse</span> <span className="t-path">~/project</span>{" "}
           <span className="t-prompt">(</span>
           <span className="t-branch">{repoState.branch}</span>
-          <span className="t-prompt">)</span>
-          {' '}
-          <span className="t-prompt">$</span>
-          {' '}
+          <span className="t-prompt">)</span> <span className="t-prompt">$</span>{" "}
           <input
             ref={inputRef}
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="type a git command..."
             autoComplete="off"
@@ -224,11 +236,11 @@ export default function TerminalEmulator() {
             autoCapitalize="off"
             spellCheck={false}
             style={{
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              color: 'var(--text)',
-              fontFamily: 'IBM Plex Mono, monospace',
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              color: "var(--text)",
+              fontFamily: "IBM Plex Mono, monospace",
               fontSize: 12.5,
               flex: 1,
               minWidth: 0,
@@ -238,5 +250,5 @@ export default function TerminalEmulator() {
         </div>
       </div>
     </div>
-  )
+  );
 }

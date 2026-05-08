@@ -1,1 +1,1 @@
-export { VisualizersPage as default } from './pages.jsx'
+export { VisualizersPage as default } from "./pages.jsx";

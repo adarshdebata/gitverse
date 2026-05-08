@@ -32,11 +32,7 @@ export default function PlaygroundPage() {
         badge="interactive"
       />
 
-      <Tabs
-        tabs={TABS}
-        activeTab={playgroundTab}
-        onTabChange={setPlaygroundTab}
-      />
+      <Tabs tabs={TABS} activeTab={playgroundTab} onTabChange={setPlaygroundTab} />
 
       {/* ── TERMINAL ─────────────────────────────── */}
       {playgroundTab === "terminal" && (
@@ -88,19 +84,12 @@ export default function PlaygroundPage() {
       {/* ── COMMIT GRAPH ─────────────────────────── */}
       {playgroundTab === "graph" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Live visualization of the simulated repository. Run commands in the
-            Terminal tab to update the commit history and branch state.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Live visualization of the simulated repository. Run commands in the Terminal tab to
+            update the commit history and branch state.
           </div>
           <div className="viz-canvas" style={{ marginBottom: 16 }}>
-            <CommitGraph
-              scenario="feature_branch"
-              animated
-              showLabels
-              showHead
-            />
+            <CommitGraph scenario="feature_branch" animated showLabels showHead />
           </div>
           <RepoStatePanel expanded />
         </div>
@@ -109,11 +98,9 @@ export default function PlaygroundPage() {
       {/* ── SIMULATORS ───────────────────────────── */}
       {playgroundTab === "rebase" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Step through a complete git rebase operation — see how commits are
-            detached, replayed on the new base, and assigned new SHAs.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Step through a complete git rebase operation — see how commits are detached, replayed on
+            the new base, and assigned new SHAs.
           </div>
           <RebaseViz />
         </div>
@@ -121,11 +108,9 @@ export default function PlaygroundPage() {
 
       {playgroundTab === "reset" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Visualize all three reset modes and their effect on the Three Trees:
-            HEAD, Index (staging area), and Working Tree.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Visualize all three reset modes and their effect on the Three Trees: HEAD, Index
+            (staging area), and Working Tree.
           </div>
           <ResetViz />
         </div>
@@ -133,11 +118,9 @@ export default function PlaygroundPage() {
 
       {playgroundTab === "stash" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Step through a complete stash workflow: save work, switch branches,
-            do a hotfix, then restore your in-progress changes.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Step through a complete stash workflow: save work, switch branches, do a hotfix, then
+            restore your in-progress changes.
           </div>
           <StashViz />
         </div>
@@ -145,11 +128,9 @@ export default function PlaygroundPage() {
 
       {playgroundTab === "merge" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Simulate a merge conflict from start to resolution. See how Git
-            writes conflict markers and how to resolve them properly.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Simulate a merge conflict from start to resolution. See how Git writes conflict markers
+            and how to resolve them properly.
           </div>
           <MergeConflictViz />
         </div>
@@ -157,11 +138,9 @@ export default function PlaygroundPage() {
 
       {playgroundTab === "bisect" && (
         <div className="animate-fade-in">
-          <div
-            style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
-          >
-            Watch git bisect perform binary search to find the commit that
-            introduced a bug. 10 commits = only 4 steps needed.
+          <div style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}>
+            Watch git bisect perform binary search to find the commit that introduced a bug. 10
+            commits = only 4 steps needed.
           </div>
           <BisectViz />
         </div>
@@ -258,8 +237,7 @@ function RepoStatePanel({ expanded = false }) {
               style={{
                 fontFamily: "IBM Plex Mono",
                 fontSize: 11,
-                color:
-                  b === repoState.branch ? "var(--accent)" : "var(--muted)",
+                color: b === repoState.branch ? "var(--accent)" : "var(--muted)",
               }}
             >
               {b === repoState.branch ? "* " : "  "}

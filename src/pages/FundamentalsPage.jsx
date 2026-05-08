@@ -1,1 +1,1 @@
-export { FundamentalsPage as default } from './pages.jsx'
+export { FundamentalsPage as default } from "./pages.jsx";

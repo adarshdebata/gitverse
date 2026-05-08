@@ -1,20 +1,20 @@
-import { useState, useEffect, useRef } from 'react'
-import { layoutGraph, buildEdgePath, getGraphBounds, getBranchColor, GRAPHS } from '@/data/graphs'
+import { useState, useEffect, useRef } from "react";
+import { layoutGraph, buildEdgePath, getGraphBounds, getBranchColor, GRAPHS } from "@/data/graphs";
 
-const NODE_R   = 9
-const HEAD_R   = 11
+const NODE_R = 9;
+const HEAD_R = 11;
 
 function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) {
-  const color = getBranchColor(node.branch)
-  const [visible, setVisible] = useState(!animated)
+  const color = getBranchColor(node.branch);
+  const [visible, setVisible] = useState(!animated);
 
   useEffect(() => {
-    if (!animated) return
-    const t = setTimeout(() => setVisible(true), delay)
-    return () => clearTimeout(t)
-  }, [animated, delay])
+    if (!animated) return;
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [animated, delay]);
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <g
@@ -22,7 +22,7 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
       onClick={() => onClick?.(node)}
       style={{
         transformOrigin: `${node.x}px ${node.y}px`,
-        animation: animated ? `nodeIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both` : 'none',
+        animation: animated ? `nodeIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both` : "none",
         animationDelay: `${delay}ms`,
       }}
     >
@@ -33,7 +33,7 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
           cy={node.y}
           r={isHead ? HEAD_R + 5 : NODE_R + 4}
           fill="none"
-          stroke={isHead ? 'white' : color}
+          stroke={isHead ? "white" : color}
           strokeWidth={1.5}
           opacity={0.4}
         />
@@ -45,11 +45,11 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
         cy={node.y}
         r={isHead ? HEAD_R : NODE_R}
         fill={color}
-        stroke={isHead ? 'white' : 'transparent'}
+        stroke={isHead ? "white" : "transparent"}
         strokeWidth={isHead ? 2 : 0}
         opacity={node.rebased ? 0.7 : 1}
         style={{
-          filter: isHead ? `drop-shadow(0 0 6px ${color})` : 'none',
+          filter: isHead ? `drop-shadow(0 0 6px ${color})` : "none",
         }}
       />
 
@@ -61,7 +61,7 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
           textAnchor="middle"
           fontSize={9}
           fill="white"
-          style={{ pointerEvents: 'none', userSelect: 'none' }}
+          style={{ pointerEvents: "none", userSelect: "none" }}
         >
           M
         </text>
@@ -75,7 +75,7 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
           textAnchor="middle"
           fontSize={7}
           fill="white"
-          style={{ pointerEvents: 'none', userSelect: 'none' }}
+          style={{ pointerEvents: "none", userSelect: "none" }}
         >
           ′
         </text>
@@ -89,7 +89,7 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
         fontSize={8.5}
         fill="var(--muted)"
         fontFamily="IBM Plex Mono"
-        style={{ pointerEvents: 'none', userSelect: 'none' }}
+        style={{ pointerEvents: "none", userSelect: "none" }}
       >
         {(node.sha || node.id).slice(0, 7)}
       </text>
@@ -123,33 +123,28 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
 
       {/* Cherry indicator */}
       {(node.cherry || node.cherry_dest) && (
-        <text
-          x={node.x + 12}
-          y={node.y - 10}
-          fontSize={10}
-          style={{ pointerEvents: 'none' }}
-        >
+        <text x={node.x + 12} y={node.y - 10} fontSize={10} style={{ pointerEvents: "none" }}>
           🍒
         </text>
       )}
 
       <title>{node.message || node.id}</title>
     </g>
-  )
+  );
 }
 
 function EdgePath({ from, to, animated, delay = 0, color }) {
-  const pathD = buildEdgePath(from, to)
-  const edgeColor = color || getBranchColor(from.branch)
-  const [visible, setVisible] = useState(!animated)
+  const pathD = buildEdgePath(from, to);
+  const edgeColor = color || getBranchColor(from.branch);
+  const [visible, setVisible] = useState(!animated);
 
   useEffect(() => {
-    if (!animated) return
-    const t = setTimeout(() => setVisible(true), delay)
-    return () => clearTimeout(t)
-  }, [animated, delay])
+    if (!animated) return;
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [animated, delay]);
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <path
@@ -158,18 +153,18 @@ function EdgePath({ from, to, animated, delay = 0, color }) {
       strokeWidth={2}
       fill="none"
       opacity={0.65}
-      className={animated ? 'svg-line-animated' : ''}
+      className={animated ? "svg-line-animated" : ""}
       style={animated ? { animationDelay: `${delay}ms` } : {}}
     />
-  )
+  );
 }
 
 function BranchLabel({ branch, node, color }) {
-  const label = branch
-  const isAbove = node.y <= 55
-  const lx = node.x
-  const ly = isAbove ? node.y + 42 : node.y - 26
-  const w  = Math.max(label.length * 6.5 + 14, 60)
+  const label = branch;
+  const isAbove = node.y <= 55;
+  const lx = node.x;
+  const ly = isAbove ? node.y + 42 : node.y - 26;
+  const w = Math.max(label.length * 6.5 + 14, 60);
 
   return (
     <g>
@@ -191,20 +186,20 @@ function BranchLabel({ branch, node, color }) {
         fill={color}
         fontFamily="IBM Plex Mono"
         fontWeight="700"
-        style={{ pointerEvents: 'none', userSelect: 'none' }}
+        style={{ pointerEvents: "none", userSelect: "none" }}
       >
         {label}
       </text>
     </g>
-  )
+  );
 }
 
 function HeadPointer({ node }) {
-  const x = node.x
-  const y = node.y - 16
+  const x = node.x;
+  const y = node.y - 16;
 
   return (
-    <g style={{ animation: 'headArrow 0.4s ease both' }}>
+    <g style={{ animation: "headArrow 0.4s ease both" }}>
       <text
         x={x}
         y={y - 10}
@@ -217,14 +212,16 @@ function HeadPointer({ node }) {
         HEAD
       </text>
       <line
-        x1={x} y1={y - 6}
-        x2={x} y2={y - 1}
+        x1={x}
+        y1={y - 6}
+        x2={x}
+        y2={y - 1}
         stroke="var(--accent)"
         strokeWidth={1.5}
         markerEnd="url(#headArrow)"
       />
     </g>
-  )
+  );
 }
 
 /**
@@ -238,56 +235,56 @@ function HeadPointer({ node }) {
  * @param {function} props.onNodeClick - callback(node)
  */
 export default function CommitGraph({
-  scenario = 'feature_branch',
+  scenario = "feature_branch",
   customGraph,
   animated = true,
   showLabels = true,
   showHead = true,
   onNodeClick,
-  className = '',
+  className = "",
   style = {},
 }) {
-  const [selected, setSelected] = useState(null)
-  const graphDef = customGraph || GRAPHS[scenario] || GRAPHS.feature_branch
+  const [selected, setSelected] = useState(null);
+  const graphDef = customGraph || GRAPHS[scenario] || GRAPHS.feature_branch;
 
   // Layout: compute x/y positions
-  const laidOut = layoutGraph(graphDef.nodes, graphDef.edges)
-  const { width, height } = getGraphBounds(laidOut)
+  const laidOut = layoutGraph(graphDef.nodes, graphDef.edges);
+  const { width, height } = getGraphBounds(laidOut);
 
-  const nodeMap = {}
-  laidOut.forEach(n => { nodeMap[n.id] = n })
+  const nodeMap = {};
+  laidOut.forEach((n) => {
+    nodeMap[n.id] = n;
+  });
 
-  const headNode = nodeMap[graphDef.head]
+  const headNode = nodeMap[graphDef.head];
 
   const handleNodeClick = (node) => {
-    setSelected(node.id === selected ? null : node.id)
-    onNodeClick?.(node)
-  }
+    setSelected(node.id === selected ? null : node.id);
+    onNodeClick?.(node);
+  };
 
   return (
-    <div className={className} style={{ overflow: 'auto', ...style }}>
+    <div className={className} style={{ overflow: "auto", ...style }}>
       <svg
         viewBox={`0 0 ${width + 20} ${height + 20}`}
-        style={{ width: '100%', minWidth: Math.min(width + 20, 300), maxHeight: 220, overflow: 'visible' }}
+        style={{
+          width: "100%",
+          minWidth: Math.min(width + 20, 300),
+          maxHeight: 220,
+          overflow: "visible",
+        }}
       >
         <defs>
-          <marker
-            id="headArrow"
-            markerWidth={6}
-            markerHeight={6}
-            refX={3}
-            refY={3}
-            orient="auto"
-          >
+          <marker id="headArrow" markerWidth={6} markerHeight={6} refX={3} refY={3} orient="auto">
             <path d="M0,0 L0,6 L6,3 z" fill="var(--accent)" />
           </marker>
         </defs>
 
         {/* Edges */}
         {graphDef.edges.map((edge, i) => {
-          const from = nodeMap[edge.from]
-          const to   = nodeMap[edge.to]
-          if (!from || !to) return null
+          const from = nodeMap[edge.from];
+          const to = nodeMap[edge.to];
+          if (!from || !to) return null;
           return (
             <EdgePath
               key={`${edge.from}-${edge.to}`}
@@ -297,7 +294,7 @@ export default function CommitGraph({
               delay={i * 60}
               color={getBranchColor(from.branch)}
             />
-          )
+          );
         })}
 
         {/* Nodes */}
@@ -314,24 +311,17 @@ export default function CommitGraph({
         ))}
 
         {/* HEAD pointer */}
-        {showHead && headNode && (
-          <HeadPointer node={headNode} />
-        )}
+        {showHead && headNode && <HeadPointer node={headNode} />}
 
         {/* Branch labels */}
-        {showLabels && graphDef.branches && Object.entries(graphDef.branches).map(([branch, nodeId]) => {
-          const node = nodeMap[nodeId]
-          if (!node) return null
-          const color = getBranchColor(branch)
-          return (
-            <BranchLabel
-              key={branch}
-              branch={branch}
-              node={node}
-              color={color}
-            />
-          )
-        })}
+        {showLabels &&
+          graphDef.branches &&
+          Object.entries(graphDef.branches).map(([branch, nodeId]) => {
+            const node = nodeMap[nodeId];
+            if (!node) return null;
+            const color = getBranchColor(branch);
+            return <BranchLabel key={branch} branch={branch} node={node} color={color} />;
+          })}
       </svg>
 
       {/* Selected node tooltip */}
@@ -340,24 +330,28 @@ export default function CommitGraph({
           className="animate-fade-in"
           style={{
             marginTop: 8,
-            padding: '8px 12px',
-            background: 'var(--surface)',
-            border: '1px solid var(--border-b)',
+            padding: "8px 12px",
+            background: "var(--surface)",
+            border: "1px solid var(--border-b)",
             borderRadius: 8,
             fontSize: 12,
-            fontFamily: 'IBM Plex Mono',
-            display: 'flex',
+            fontFamily: "IBM Plex Mono",
+            display: "flex",
             gap: 12,
-            flexWrap: 'wrap',
+            flexWrap: "wrap",
           }}
         >
-          <span style={{ color: 'var(--amber)' }}>{nodeMap[selected].sha || nodeMap[selected].id}</span>
-          <span style={{ color: 'var(--muted)' }}>branch: </span>
-          <span style={{ color: getBranchColor(nodeMap[selected].branch) }}>{nodeMap[selected].branch}</span>
-          <span style={{ color: 'var(--muted)' }}>│</span>
-          <span style={{ color: 'var(--text)' }}>{nodeMap[selected].message}</span>
+          <span style={{ color: "var(--amber)" }}>
+            {nodeMap[selected].sha || nodeMap[selected].id}
+          </span>
+          <span style={{ color: "var(--muted)" }}>branch: </span>
+          <span style={{ color: getBranchColor(nodeMap[selected].branch) }}>
+            {nodeMap[selected].branch}
+          </span>
+          <span style={{ color: "var(--muted)" }}>│</span>
+          <span style={{ color: "var(--text)" }}>{nodeMap[selected].message}</span>
         </div>
       )}
     </div>
-  )
+  );
 }

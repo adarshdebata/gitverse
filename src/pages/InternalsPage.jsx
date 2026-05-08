@@ -1,1 +1,1 @@
-export { InternalsPage as default } from './pages.jsx'
+export { InternalsPage as default } from "./pages.jsx";
