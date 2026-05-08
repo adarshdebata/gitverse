@@ -148,7 +148,7 @@ git remote set-url origin git@github.com:company/repo.git`} />
 // ============================================================
 import { Tabs } from '@/components/ui/index.jsx'
 import { useState } from 'react'
-import { GitObjectModel } from '@/components/visualizers/index.jsx'
+
 
 export function InternalsPage() {
   const [tab, setTab] = useState('objects')
@@ -893,8 +893,10 @@ export function ComparePage() {
 // ============================================================
 // VisualizersPage
 // ============================================================
-import { StagingViz } from '@/components/visualizers/index.jsx'
-import { ReflogViz }  from '@/components/visualizers/index.jsx'
+import {
+  StagingViz, RebaseViz, ResetViz, StashViz,
+  ReflogViz, MergeConflictViz, BisectViz, GitObjectModel,
+} from '@/components/visualizers/index.jsx'
 
 export function VisualizersPage() {
   const [active, setActive] = useState('staging')
