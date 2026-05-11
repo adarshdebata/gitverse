@@ -6,6 +6,13 @@ import { Search, Terminal, GitBranch, RotateCcw, LifeBuoy } from "lucide-react";
 
 const DIFFICULTY_ORDER = { beginner: 0, intermediate: 1, advanced: 2 };
 
+const GIT_VERSION = {
+  add: null, commit: null, status: null, log: null, diff: null, branch: null,
+  switch: "2.23+", restore: "2.23+", rebase: null, reset: null, revert: null,
+  stash: null, cherry_pick: null, reflog: null, bisect: null,
+  worktree: "2.5+", sparse_checkout: "2.25+",
+};
+
 const CATEGORY_ICONS = {
   daily: <Terminal size={16} />,
   advanced: <GitBranch size={16} />,
@@ -37,17 +44,18 @@ export default function CommandsPage() {
     <div className="animate-fade-up">
       <SectionHeader
         title="Command Reference"
-        subtitle="Every Git command with full internals, visualization, and recovery paths. Click any command for the complete deep-dive."
+        subtitle="Deep-dives on every Git command — internals, edge cases, and recovery paths."
         badge="15+ commands"
       />
 
-      <SearchBox
-        value={searchQuery}
-        onChange={setSearchQuery}
-        placeholder="Search commands, tags, concepts..."
-        className="mb-6"
-        style={{ maxWidth: 480, marginBottom: 28 }}
-      />
+      <div style={{ maxWidth: 480, marginBottom: 24 }}>
+        <SearchBox
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search commands, tags, concepts..."
+        />
+      </div>
+      <div style={{ height: 1, background: "var(--border)", marginBottom: 20 }} />
 
       {filtered.length === 0 && (
         <div
@@ -73,7 +81,7 @@ export default function CommandsPage() {
         const catMeta = CATEGORIES[cat] || { label: cat };
 
         return (
-          <div key={cat} style={{ marginBottom: 36 }}>
+          <div key={cat} style={{ marginBottom: 36, paddingTop: 8 }}>
             <div
               style={{
                 display: "flex",
@@ -112,7 +120,7 @@ export default function CommandsPage() {
               style={{
                 display: "grid",
                 gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 12,
+                gap: 14,
               }}
             >
               {cmds.map((cmd) => (
@@ -171,13 +179,22 @@ function CommandCard({ cmd, onClick }) {
             {cmd.short}
           </p>
 
-          {/* Tags */}
-          <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+          {/* Tags + git version badge */}
+          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", alignItems: "center" }}>
             {cmd.tags.slice(0, 3).map((t) => (
               <Badge key={t} variant="purple">
                 {t}
               </Badge>
             ))}
+            {GIT_VERSION[cmd.id] && (
+              <span style={{
+                fontSize: 9, fontFamily: "IBM Plex Mono", color: "var(--cyan)",
+                background: "var(--cyan-dim)", border: "1px solid rgba(34,211,238,0.25)",
+                borderRadius: 4, padding: "1px 6px", marginLeft: 4, flexShrink: 0,
+              }}>
+                git {GIT_VERSION[cmd.id]}
+              </span>
+            )}
           </div>
         </div>
 

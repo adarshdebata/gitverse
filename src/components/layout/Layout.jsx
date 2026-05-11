@@ -1,12 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, Sun, Moon } from "lucide-react";
+import { Menu, Sun, Moon, ChevronDown } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useAppStore } from "@/store/useAppStore";
 
 function TopBar() {
   const { toggleSidebar, theme, toggleTheme } = useAppStore();
   const navigate = useNavigate();
+  const [versionOpen, setVersionOpen] = useState(false);
+  const versionRef = useRef(null);
+
+  useEffect(() => {
+    function handler(e) {
+      if (versionRef.current && !versionRef.current.contains(e.target)) setVersionOpen(false);
+    }
+    if (versionOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [versionOpen]);
 
   return (
     <header
@@ -65,20 +75,52 @@ function TopBar() {
         ))}
       </div>
 
-      {/* Git version badge */}
-      <div
-        style={{
-          fontSize: 10,
-          fontFamily: "IBM Plex Mono",
-          color: "var(--muted)",
-          background: "var(--card)",
-          border: "1px solid var(--border)",
-          borderRadius: 6,
-          padding: "4px 10px",
-          flexShrink: 0,
-        }}
-      >
-        git 2.44+
+      {/* Git version selector */}
+      <div ref={versionRef} style={{ position: "relative", flexShrink: 0 }}>
+        <button
+          onClick={() => setVersionOpen(v => !v)}
+          style={{
+            display: "flex", alignItems: "center", gap: 5,
+            fontSize: 10, fontFamily: "IBM Plex Mono",
+            color: "var(--muted)", background: "var(--card)",
+            border: "1px solid var(--border)", borderRadius: 6,
+            padding: "4px 10px", cursor: "pointer",
+            transition: "border-color 0.15s, color 0.15s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--border-b)"; e.currentTarget.style.color = "var(--text)"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--muted)"; }}
+        >
+          git 2.44+ <ChevronDown size={10} />
+        </button>
+        {versionOpen && (
+          <div style={{
+            position: "absolute", top: "calc(100% + 6px)", right: 0,
+            background: "var(--card)", border: "1px solid var(--border)",
+            borderRadius: 8, padding: "6px 0", zIndex: 100, minWidth: 160,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+          }}>
+            {[
+              { v: "2.44+", label: "Latest (2.44+)", note: "all features" },
+              { v: "2.38+", label: "2.38 – 2.43",   note: "no sparse-index" },
+              { v: "2.23+", label: "2.23 – 2.37",   note: "switch/restore added" },
+            ].map(item => (
+              <button key={item.v}
+                onClick={() => setVersionOpen(false)}
+                style={{
+                  display: "flex", flexDirection: "column", width: "100%",
+                  padding: "8px 14px", background: "none", border: "none",
+                  textAlign: "left", cursor: "pointer", gap: 2,
+                  transition: "background 0.12s",
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--card-hover)"}
+                onMouseLeave={e => e.currentTarget.style.background = "none"}
+              >
+                <span style={{ fontSize: 12, color: "var(--text)", fontFamily: "IBM Plex Mono" }}>{item.label}</span>
+                <span style={{ fontSize: 10, color: "var(--muted)" }}>{item.note}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Theme toggle */}

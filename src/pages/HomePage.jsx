@@ -107,93 +107,113 @@ export default function HomePage() {
           }}
         />
 
-        <div style={{ position: "relative", zIndex: 1 }}>
+        <div
+          style={{
+            position: "relative",
+            zIndex: 1,
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 48,
+            alignItems: "center",
+          }}
+        >
+          {/* Left column: headline + subtitle + CTA */}
+          <div>
+            <h1
+              className="font-heading"
+              style={{
+                fontSize: "clamp(30px, 5vw, 56px)",
+                fontWeight: 900,
+                lineHeight: 1.08,
+                marginBottom: 18,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Git, explained <span className="gradient-brand">visually</span>
+              <br />
+              like never before.
+            </h1>
 
-          <h1
-            className="font-heading"
+            <p
+              style={{
+                fontSize: 16,
+                color: "var(--muted)",
+                maxWidth: 580,
+                lineHeight: 1.75,
+                marginBottom: 32,
+              }}
+            >
+              Every command animated. Every concept interactive. Built for engineers who want to
+              understand Git deeply — not just use it.
+            </p>
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <button
+                className="btn btn-primary"
+                style={{
+                  padding: "12px 28px",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: "0 0 24px rgba(99,102,241,0.45)",
+                  transition: "box-shadow 0.2s ease, transform 0.2s ease",
+                }}
+                onClick={() => navigate("/playground")}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "0 0 36px rgba(99,102,241,0.7)";
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "0 0 24px rgba(99,102,241,0.45)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                }}
+              >
+                Open Playground →
+              </button>
+              <button
+                className="btn"
+                style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
+                onClick={() => navigate("/commands")}
+              >
+                <BookOpen size={14} /> Command Reference
+              </button>
+              <button
+                className="btn"
+                style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
+                onClick={() => navigate("/internals")}
+              >
+                <Settings2 size={14} /> Git Internals
+              </button>
+            </div>
+          </div>
+
+          {/* Right column: 2×2 stat cards */}
+          <div
             style={{
-              fontSize: "clamp(30px, 5vw, 56px)",
-              fontWeight: 900,
-              lineHeight: 1.08,
-              marginBottom: 18,
-              letterSpacing: "-0.02em",
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 14,
             }}
           >
-            Git, explained <span className="gradient-brand">visually</span>
-            <br />
-            like never before.
-          </h1>
-
-          <p
-            style={{
-              fontSize: 16,
-              color: "var(--muted)",
-              maxWidth: 580,
-              lineHeight: 1.75,
-              marginBottom: 32,
-            }}
-          >
-            Every command animated. Every concept interactive. Built for senior engineers who want
-            to understand Git deeply — not just use it. From SHA internals to enterprise recovery
-            workflows.
-          </p>
-
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <button
-              className="btn btn-primary"
-              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
-              onClick={() => navigate("/playground")}
-            >
-              <Zap size={14} /> Open Playground
-            </button>
-            <button
-              className="btn"
-              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
-              onClick={() => navigate("/commands")}
-            >
-              <BookOpen size={14} /> Command Reference
-            </button>
-            <button
-              className="btn"
-              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
-              onClick={() => navigate("/internals")}
-            >
-              <Settings2 size={14} /> Git Internals
-            </button>
+            {STATS.map((s, i) => (
+              <div
+                key={i}
+                className="gitverse-card"
+                style={{ padding: "20px 24px", textAlign: "center" }}
+              >
+                <div
+                  className="font-heading"
+                  style={{ fontSize: 32, fontWeight: 900, color: s.color, lineHeight: 1 }}
+                >
+                  {s.n}
+                </div>
+                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>{s.label}</div>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
-
-      {/* ── STATS ────────────────────────────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 1,
-          background: "var(--border)",
-          borderRadius: 10,
-          overflow: "hidden",
-          marginBottom: 40,
-        }}
-      >
-        {STATS.map((s, i) => (
-          <div
-            key={i}
-            style={{
-              padding: "20px 24px",
-              background: "var(--card)",
-              textAlign: "center",
-            }}
-          >
-            <div
-              className="font-heading"
-              style={{ fontSize: 32, fontWeight: 900, color: s.color, lineHeight: 1 }}
-            >
-              {s.n}
-            </div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>{s.label}</div>
-          </div>
-        ))}
       </div>
 
       {/* ── LIVE COMMIT GRAPH ────────────────────────────── */}

@@ -49,19 +49,32 @@ export function Alert({ type = "info", children, className = "" }) {
 import { useState } from "react";
 import { Search } from "lucide-react";
 
-function syntaxHighlight(line) {
-  if (!line) return "";
-  if (line.startsWith("#")) return `<span class="c-comment">${escHtml(line)}</span>`;
-  // Highlight git commands + flags + arguments
-  return escHtml(line)
-    .replace(/^(git\s+\S+)/, '<span class="c-cmd">$1</span>')
-    .replace(/(\s--?[\w-]+)/g, '<span class="c-flag">$1</span>')
-    .replace(/"([^"]+)"/g, '"<span class="c-str">$1</span>"')
-    .replace(/^(error:|fatal:)(.*)/, '<span class="c-err">$1$2</span>');
-}
-
 function escHtml(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function highlightGit(h) {
+  return h
+    .replace(/^(git)\s(\S+)/, '<span class="c-cmd">git</span> <span class="c-subcmd">$2</span>')
+    .replace(/(\s)(--?[\w-]+=?)(\S*)/g, (_, sp, flag, val) =>
+      val ? `${sp}<span class="c-flag">${flag}</span><span class="c-arg">${val}</span>`
+           : `${sp}<span class="c-flag">${flag}</span>`)
+    .replace(/"([^"]*?)"/g, '"<span class="c-str">$1</span>"')
+    .replace(/\b([0-9a-f]{7,40})\b/g, '<span class="c-hash">$1</span>')
+    .replace(/^(error:|fatal:|warning:)(.*)/,
+      '<span class="c-err">$1</span><span class="c-comment">$2</span>');
+}
+
+function syntaxHighlight(line) {
+  if (!line) return "";
+  const h = escHtml(line);
+  // Comment lines
+  if (h.trimStart().startsWith("#")) return `<span class="c-comment">${h}</span>`;
+  // Prompt lines ($ prefix)
+  if (h.startsWith("$ ")) return `<span class="c-prompt">$ </span>${highlightGit(h.slice(2))}`;
+  // Output annotation lines (→ or ←)
+  if (/^[→←]/.test(h)) return `<span class="c-comment">${h}</span>`;
+  return highlightGit(h);
 }
 
 export function CodeBlock({ code, language = "bash", showCopy = true, className = "" }) {
@@ -78,7 +91,7 @@ export function CodeBlock({ code, language = "bash", showCopy = true, className 
   const lines = code.split("\n");
 
   return (
-    <div className={`codeblock ${className}`} style={{ position: "relative" }}>
+    <div className={`codeblock ${className}`} style={{ position: "relative", borderLeft: "3px solid var(--border-b)" }}>
       {showCopy && (
         <button
           onClick={handleCopy}
@@ -101,7 +114,7 @@ export function CodeBlock({ code, language = "bash", showCopy = true, className 
           {copied ? "✓ copied" : "copy"}
         </button>
       )}
-      <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+      <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-word", tabSize: 2 }}>
         {lines.map((line, i) => (
           <span
             key={i}

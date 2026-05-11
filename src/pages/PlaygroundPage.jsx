@@ -75,6 +75,21 @@ export default function PlaygroundPage() {
               <TipsPanel />
             </div>
           </div>
+
+          {/* Live commit graph */}
+          <div className="gitverse-card" style={{ marginTop: 14, padding: 16 }}>
+            <div style={{
+              fontSize: 10, fontWeight: 700, color: "var(--muted)", marginBottom: 12,
+              fontFamily: "IBM Plex Mono", textTransform: "uppercase", letterSpacing: "0.07em",
+              display: "flex", alignItems: "center", gap: 6,
+            }}>
+              <GitBranch size={12} /> Live Repository Graph
+              <span style={{ marginLeft: "auto", fontSize: 9, color: "var(--dim)", fontWeight: 400 }}>
+                updates as you type commands
+              </span>
+            </div>
+            <CommitGraph scenario="feature_branch" animated showLabels showHead />
+          </div>
         </div>
       )}
 

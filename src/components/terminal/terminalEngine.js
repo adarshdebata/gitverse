@@ -52,53 +52,50 @@ export function parseCommand(input, repo) {
   }
 
   if (raw === "help" || raw === "git help") {
+    const row = (cmd, desc) =>
+      `  ${t.success(cmd.padEnd(36))}${t.dim(desc)}`;
+    const sep = () => ``;
+
     return {
-      output: `${t.info("GitVerse Terminal — supported commands")}
-
-${t.dim("Status & Info:")}
-  ${t.success("git status")}             show working tree status
-  ${t.success("git log --oneline")}      compact commit history
-  ${t.success("git log --graph")}        ASCII branch graph
-  ${t.success("git log --stat")}         log with file stats
-  ${t.success("git diff")}               show unstaged changes
-  ${t.success("git diff --staged")}      show staged changes
-  ${t.success("git show")}               show last commit details
-  ${t.success("git branch")}             list branches
-  ${t.success("git reflog")}             show HEAD history
-
-${t.dim("Staging & Committing:")}
-  ${t.success("git add .")}              stage all changes
-  ${t.success("git add -p")}             interactive staging
-  ${t.success("git add -u")}             stage tracked changes only
-  ${t.success('git commit -m "msg"')}    create commit
-  ${t.success("git commit --amend")}     amend last commit
-
-${t.dim("Branching:")}
-  ${t.success("git switch <branch>")}    switch branches
-  ${t.success("git switch -c <branch>")} create + switch
-  ${t.success("git branch <name>")}      create branch
-  ${t.success("git branch -d <name>")}   delete branch
-
-${t.dim("Sync:")}
-  ${t.success("git stash")}              stash changes
-  ${t.success("git stash pop")}          apply top stash
-  ${t.success("git stash list")}         list stashes
-
-${t.dim("Undo:")}
-  ${t.success("git reset --soft HEAD~1")}   undo commit, keep staged
-  ${t.success("git reset --mixed HEAD~1")}  undo commit, unstage
-  ${t.success("git reset --hard HEAD~1")}   undo commit, discard all
-  ${t.success("git revert HEAD")}           safe undo (new commit)
-  ${t.success("git restore <file>")}        discard working tree change
-  ${t.success("git restore --staged <f>")}  unstage file
-
-${t.dim("Other:")}
-  ${t.success("git rebase -i HEAD~3")}    interactive rebase
-  ${t.success("git cherry-pick <sha>")}   apply specific commit
-  ${t.success("git bisect start")}        begin bug hunt
-  ${t.success("git cat-file -p HEAD")}    inspect git object
-  ${t.success("git ls-files --stage")}    inspect index
-  ${t.success("clear")}                   clear terminal`,
+      output: [
+        t.info("─── GitVerse Terminal · available commands ───"),
+        sep(),
+        t.dim("  STATUS & INFO"),
+        row("git status",              "show working tree status"),
+        row("git log --oneline",       "compact commit log"),
+        row("git log --graph",         "ASCII branch graph"),
+        row("git diff",                "unstaged changes"),
+        row("git diff --staged",       "staged changes"),
+        row("git branch",              "list all branches"),
+        row("git reflog",              "HEAD movement history"),
+        sep(),
+        t.dim("  STAGING & COMMITS"),
+        row("git add .",               "stage all changes"),
+        row("git add -p",              "stage by hunk (interactive)"),
+        row(`git commit -m "msg"`,     "create commit"),
+        row("git commit --amend",      "amend last commit"),
+        sep(),
+        t.dim("  BRANCHES"),
+        row("git switch <branch>",     "switch branch"),
+        row("git switch -c <name>",    "create + switch"),
+        row("git branch -d <name>",    "delete branch"),
+        sep(),
+        t.dim("  UNDO"),
+        row("git reset --soft HEAD~1", "undo commit, keep staged"),
+        row("git reset --hard HEAD~1", "undo + discard all changes"),
+        row("git revert HEAD",         "safe undo (adds new commit)"),
+        row("git restore <file>",      "discard working tree change"),
+        sep(),
+        t.dim("  OTHER"),
+        row("git stash",               "stash current changes"),
+        row("git stash pop",           "apply top stash"),
+        row("git cherry-pick <sha>",   "apply a specific commit"),
+        row("git rebase -i HEAD~3",    "interactive rebase"),
+        row("git bisect start",        "start binary bug hunt"),
+        row("clear",                   "clear terminal output"),
+        sep(),
+        t.dim("  ↑↓ history · Tab autocomplete · Ctrl+C cancel"),
+      ].join("\n"),
       repoUpdate: null,
     };
   }

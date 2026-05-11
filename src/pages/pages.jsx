@@ -1336,11 +1336,11 @@ export function VisualizersPage() {
         badge="8 visualizers"
       />
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
+      <div className="viz-tab-strip">
         {items.map((item) => (
           <button
             key={item.id}
-            className={`btn ${active === item.id ? "btn-primary" : ""}`}
+            className={`viz-tab-btn ${active === item.id ? "active" : ""}`}
             onClick={() => setActive(item.id)}
           >
             {item.icon} {item.label}
@@ -1349,7 +1349,7 @@ export function VisualizersPage() {
       </div>
 
       {ActiveComp && (
-        <div className="animate-fade-in">
+        <div className="animate-fade-in" style={{ marginTop: 8 }}>
           <ActiveComp />
         </div>
       )}

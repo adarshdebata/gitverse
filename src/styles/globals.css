@@ -1638,3 +1638,58 @@ a { cursor: pointer; }
 html.light .card-interactive:hover {
   box-shadow: 0 4px 16px rgba(99,102,241,0.1), 0 0 0 1px var(--border-b);
 }
+
+/* ── Code syntax highlight tokens ── */
+.c-subcmd  { color: var(--cyan); font-weight: 600; }
+.c-prompt  { color: var(--emerald); user-select: none; }
+
+/* ── CodeBlock container improvements ── */
+.codeblock {
+  border-left: 3px solid var(--border-b);
+  font-size: 12.5px;
+  line-height: 1.8;
+}
+html.light .codeblock {
+  background: #f5f5ff;
+  border-color: var(--border-b);
+}
+html.light code {
+  background: #ededf8;
+  border-color: var(--border);
+  color: var(--accent);
+}
+
+/* ── Visualizer tab-button strip (used in VisualizersPage) ── */
+.viz-tab-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.viz-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+.viz-tab-btn:hover {
+  background: var(--card-hover);
+  border-color: var(--border-b);
+  color: var(--text);
+}
+.viz-tab-btn.active {
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
