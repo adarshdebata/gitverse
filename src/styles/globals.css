@@ -1631,6 +1631,25 @@ a { cursor: pointer; }
   -webkit-text-fill-color: transparent;
 }
 
+/* ── Hero responsive breakpoint ── */
+@media (max-width: 860px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  .hero-stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+}
+
+/* ── Playground 2-col responsive ── */
+@media (max-width: 900px) {
+  .playground-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* ── Improved card hover in dark mode ── */
 .card-interactive:hover {
   box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px var(--border-b);
