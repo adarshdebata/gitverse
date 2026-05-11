@@ -78,33 +78,28 @@ export default function Sidebar() {
       >
         <div
           style={{
-            width: 32,
-            height: 32,
+            width: 34,
+            height: 34,
             flexShrink: 0,
-            background: "linear-gradient(135deg, #6366f1, #22d3ee)",
-            borderRadius: 8,
+            background: "linear-gradient(135deg, #6366f1 0%, #818cf8 50%, #22d3ee 100%)",
+            borderRadius: 9,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            boxShadow: "0 2px 10px rgba(99,102,241,0.45)",
           }}
         >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="12" cy="12" r="3" />
-            <line x1="12" y1="2" x2="12" y2="5" />
-            <line x1="12" y1="19" x2="12" y2="22" />
-            <line x1="4.22" y1="4.22" x2="6.34" y2="6.34" />
-            <line x1="17.66" y1="17.66" x2="19.78" y2="19.78" />
-            <line x1="2" y1="12" x2="5" y2="12" />
-            <line x1="19" y1="12" x2="22" y2="12" />
+          {/* Git commit-graph logo: three nodes + branch lines */}
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            {/* vertical trunk line */}
+            <line x1="6" y1="4" x2="6" y2="16" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
+            {/* branch line to feature */}
+            <line x1="6" y1="7" x2="14" y2="13" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.7"/>
+            {/* commit nodes */}
+            <circle cx="6"  cy="4"  r="2.2" fill="white" />
+            <circle cx="6"  cy="10" r="2.2" fill="white" opacity="0.85"/>
+            <circle cx="6"  cy="16" r="2.2" fill="white" opacity="0.7"/>
+            <circle cx="14" cy="13" r="2.2" fill="white" opacity="0.9"/>
           </svg>
         </div>
         {sidebarOpen && (

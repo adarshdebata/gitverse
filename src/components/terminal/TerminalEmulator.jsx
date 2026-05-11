@@ -1,15 +1,16 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { parseCommand } from "./terminalEngine";
+import { Trash2, RotateCcw, ChevronRight } from "lucide-react";
 
 const QUICK_CMDS = [
   "git status",
   "git log --oneline",
-  "git log --graph",
-  "git reflog",
   "git branch",
-  "git stash list",
   "git diff --staged",
+  "git stash list",
+  "git reflog",
+  "git log --graph",
   "git ls-files --stage",
 ];
 
@@ -23,14 +24,10 @@ export default function TerminalEmulator() {
   const bodyRef = useRef(null);
   const cmdHistory = terminalHistory.filter((e) => e.type === "command").map((e) => e.cmd);
 
-  // Auto-scroll to bottom
   useEffect(() => {
-    if (bodyRef.current) {
-      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-    }
+    if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
   }, [terminalHistory]);
 
-  // Focus input on mount
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
@@ -47,13 +44,9 @@ export default function TerminalEmulator() {
       }
 
       const { output, repoUpdate } = parseCommand(trimmed, repoState);
-
       appendTerminalLine({ type: "command", cmd: trimmed, branch: repoState.branch });
       appendTerminalLine({ type: "output", output });
-
-      if (repoUpdate) {
-        updateRepo(repoUpdate);
-      }
+      if (repoUpdate) updateRepo(repoUpdate);
 
       setInput("");
       setHistIdx(-1);
@@ -63,10 +56,7 @@ export default function TerminalEmulator() {
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.key === "Enter") {
-        runCommand(input);
-        return;
-      }
+      if (e.key === "Enter") { runCommand(input); return; }
 
       if (e.key === "ArrowUp") {
         e.preventDefault();
@@ -86,24 +76,10 @@ export default function TerminalEmulator() {
 
       if (e.key === "Tab") {
         e.preventDefault();
-        // Basic tab completion
         const completions = [
-          "git status",
-          "git add",
-          "git commit",
-          "git push",
-          "git pull",
-          "git branch",
-          "git switch",
-          "git stash",
-          "git reset",
-          "git revert",
-          "git log",
-          "git diff",
-          "git reflog",
-          "git cherry-pick",
-          "git rebase",
-          "git bisect",
+          "git status", "git add", "git commit", "git push", "git pull",
+          "git branch", "git switch", "git stash", "git reset", "git revert",
+          "git log", "git diff", "git reflog", "git cherry-pick", "git rebase", "git bisect",
         ];
         const match = completions.find((c) => c.startsWith(input) && c !== input);
         if (match) setInput(match);
@@ -124,88 +100,113 @@ export default function TerminalEmulator() {
     <div className="terminal-root">
       {/* Title bar */}
       <div className="terminal-bar">
-        <div className="terminal-dot terminal-dot-red" />
-        <div className="terminal-dot terminal-dot-yellow" />
-        <div className="terminal-dot terminal-dot-green" />
+        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+          <div className="terminal-dot terminal-dot-red" />
+          <div className="terminal-dot terminal-dot-yellow" />
+          <div className="terminal-dot terminal-dot-green" />
+        </div>
         <span
           style={{
-            fontFamily: "IBM Plex Mono",
+            fontFamily: "IBM Plex Mono, monospace",
             fontSize: 11,
             color: "var(--muted)",
-            marginLeft: 8,
+            marginLeft: 10,
+            flex: 1,
           }}
         >
-          GitVerse Terminal — {repoState.branch}
+          GitVerse Terminal
+          <span style={{ color: "var(--accent)", marginLeft: 6 }}>— {repoState.branch}</span>
         </span>
-        <div style={{ marginLeft: "auto", display: "flex", gap: 6 }}>
+        <div style={{ display: "flex", gap: 5 }}>
           <button
             className="btn"
-            style={{ padding: "3px 8px", fontSize: 10 }}
+            style={{ padding: "3px 9px", fontSize: 10, display: "flex", alignItems: "center", gap: 4 }}
             onClick={clearTerminal}
             title="Clear terminal"
           >
-            clear
+            <Trash2 size={10} /> clear
           </button>
           <button
             className="btn btn-danger"
-            style={{ padding: "3px 8px", fontSize: 10 }}
+            style={{ padding: "3px 9px", fontSize: 10, display: "flex", alignItems: "center", gap: 4 }}
             onClick={resetRepo}
             title="Reset repository state"
           >
-            reset repo
+            <RotateCcw size={10} /> reset repo
           </button>
         </div>
       </div>
 
-      {/* Quick command buttons */}
-      <div
-        style={{
-          padding: "8px 14px",
-          borderBottom: "1px solid var(--border)",
-          display: "flex",
-          gap: 6,
-          flexWrap: "wrap",
-        }}
-      >
+      {/* Quick command chips */}
+      <div className="terminal-quick-bar">
         {QUICK_CMDS.map((cmd) => (
           <button
             key={cmd}
-            className="btn"
-            style={{ padding: "3px 10px", fontSize: 10 }}
             onClick={() => runCommand(cmd)}
+            style={{
+              background: "var(--card)",
+              border: "1px solid var(--border)",
+              borderRadius: 5,
+              padding: "3px 10px",
+              fontSize: 10,
+              color: "var(--text-muted)",
+              fontFamily: "IBM Plex Mono, monospace",
+              cursor: "pointer",
+              transition: "all 0.14s ease",
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--accent)";
+              e.currentTarget.style.color = "var(--accent)";
+              e.currentTarget.style.background = "var(--accent-dim)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border)";
+              e.currentTarget.style.color = "var(--text-muted)";
+              e.currentTarget.style.background = "var(--card)";
+            }}
           >
             {cmd}
           </button>
         ))}
       </div>
 
-      {/* Output body */}
-      <div className="terminal-body" ref={bodyRef} onClick={() => inputRef.current?.focus()}>
+      {/* Output body — always dark */}
+      <div
+        className="terminal-body"
+        ref={bodyRef}
+        onClick={() => inputRef.current?.focus()}
+      >
         {terminalHistory.length === 0 && (
-          <div>
-            <span className="t-success">Welcome to GitVerse Terminal.</span>
-            <br />
-            <span className="t-dim">A simulated Git repository is ready. Type </span>
-            <span className="t-info">help</span>
-            <span className="t-dim"> to see commands, or click a quick command above.</span>
-            <br />
-            <span className="t-dim">Use ↑↓ for command history. Tab for autocomplete.</span>
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ color: "#10b981", marginBottom: 2 }}>
+              Welcome to GitVerse Terminal.
+            </div>
+            <div style={{ color: "#6e6e9e" }}>
+              A simulated Git repository is ready. Type{" "}
+              <span style={{ color: "#6366f1" }}>help</span>
+              {" "}to see commands, or click a quick command above.
+            </div>
+            <div style={{ color: "#6e6e9e", marginTop: 2 }}>
+              ↑↓ history · Tab autocomplete · Ctrl+C cancel
+            </div>
           </div>
         )}
 
         {terminalHistory.map((entry, i) => {
           if (entry.type === "command") {
             return (
-              <div key={i} style={{ marginBottom: 2 }}>
-                <span className="t-prompt">dev@gitverse</span>{" "}
-                <span className="t-path">~/project</span> <span className="t-prompt">(</span>
+              <div key={i} style={{ marginBottom: 2, display: "flex", alignItems: "center", gap: 4 }}>
+                <span className="t-prompt">dev@gitverse</span>
+                <span className="t-path">~/project</span>
+                <span className="t-prompt">(</span>
                 <span className="t-branch">{entry.branch}</span>
-                <span className="t-prompt">)</span> <span className="t-prompt">$</span>{" "}
-                <span className="t-cmd">{entry.cmd}</span>
+                <span className="t-prompt">)</span>
+                <span className="t-prompt">$</span>
+                <span style={{ color: "#e2e2f4" }}>{entry.cmd}</span>
               </div>
             );
           }
-
           if (entry.type === "output") {
             return (
               <div
@@ -215,38 +216,31 @@ export default function TerminalEmulator() {
               />
             );
           }
-
           return null;
         })}
 
-        {/* Current input line */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span className="t-prompt">dev@gitverse</span> <span className="t-path">~/project</span>{" "}
+        {/* Live input line */}
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <span className="t-prompt">dev@gitverse</span>
+          <span className="t-path">~/project</span>
           <span className="t-prompt">(</span>
           <span className="t-branch">{repoState.branch}</span>
-          <span className="t-prompt">)</span> <span className="t-prompt">$</span>{" "}
+          <span className="t-prompt">)</span>
+          <span className="t-prompt" style={{ display: "flex", alignItems: "center" }}>
+            <ChevronRight size={12} />
+          </span>
           <input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="type a git command..."
+            placeholder="type a git command…"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
-            style={{
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: "var(--text)",
-              fontFamily: "IBM Plex Mono, monospace",
-              fontSize: 12.5,
-              flex: 1,
-              minWidth: 0,
-            }}
+            className="terminal-input"
           />
-          <div className="terminal-cursor" />
         </div>
       </div>
     </div>

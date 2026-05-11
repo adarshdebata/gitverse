@@ -843,13 +843,13 @@ code {
    TERMINAL
 ================================================================ */
 .terminal {
-  background: #050510;
+  background: var(--card-deep);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
 }
 .terminal-bar {
-  background: #0a0a1c;
+  background: var(--card-deep);
   padding: 9px 14px;
   display: flex;
   align-items: center;
@@ -1413,4 +1413,228 @@ code {
   border-radius: var(--radius-sm);
   margin-bottom: 5px;
   color: var(--text);
+}
+
+/* ================================================================
+   COMPONENT ALIASES & FIXES
+   Reconcile class names used in JSX with CSS definitions
+================================================================ */
+
+/* CSS variable alias used by Collapsible hover */
+:root { --card-h: var(--card-hover); }
+html.light { --card-h: var(--card-hover); }
+
+/* Animation aliases — components use animate-* prefix */
+.animate-fade-up  { animation: fadeUp  0.45s ease both; }
+.animate-fade-in  { animation: fadeIn  0.3s  ease both; }
+.animate-slide-in { animation: slideRight 0.3s ease both; }
+
+/* ── Card aliases (components use gitverse- prefix) ── */
+.gitverse-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.gitverse-card-interactive {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease,
+              box-shadow 0.18s ease, transform 0.18s ease;
+}
+.gitverse-card-interactive:hover {
+  background: var(--card-hover);
+  border-color: var(--border-b);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 0 0 1px var(--border-b);
+  transform: translateY(-2px);
+}
+.gitverse-card-interactive:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ── Premium Tab Bar ── */
+.tab-list {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-wrap: nowrap;
+}
+.tab-list::-webkit-scrollbar { display: none; }
+
+.tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+.tab-item:hover {
+  background: var(--card-hover);
+  color: var(--text);
+}
+.tab-item.active {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+html.light .tab-item.active {
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+}
+
+/* ── Terminal (themed shell, dark body) ── */
+.terminal-root {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+}
+.terminal-root .terminal-bar {
+  background: var(--card-deep);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+html.light .terminal-root .terminal-bar {
+  background: var(--card);
+}
+.terminal-root .terminal-quick-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 7px 12px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.terminal-root .terminal-body {
+  background: #06060f;
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  overflow-y: auto;
+  min-height: 240px;
+  max-height: 400px;
+  color: #e2e2f4;
+  cursor: text;
+}
+.terminal-root .terminal-body::-webkit-scrollbar { width: 4px; }
+.terminal-root .terminal-body::-webkit-scrollbar-track { background: transparent; }
+.terminal-root .terminal-body::-webkit-scrollbar-thumb {
+  background: #2a2a4a;
+  border-radius: 99px;
+}
+.terminal-root .terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e2f4;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  flex: 1;
+  min-width: 0;
+}
+.terminal-root .terminal-input::placeholder { color: #3a3a60; }
+
+/* Terminal dot colours (terminal-dot-red etc.) */
+.terminal-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.terminal-dot-red    { background: #ff5f57; }
+.terminal-dot-yellow { background: #ffbd2e; }
+.terminal-dot-green  { background: #28ca41; }
+
+/* ── Step Progress dots ── */
+.step-progress {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+.step-pip {
+  flex: 1;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--border);
+  transition: background 0.35s ease;
+}
+.step-pip.active { background: var(--accent); }
+
+/* ── Comparison table ── */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.comp-table th {
+  padding: 10px 14px;
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.comp-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.comp-table tr:hover td { background: rgba(99,102,241,0.03); }
+.comp-table tr:last-child td { border-bottom: none; }
+
+/* ── Global cursor & interaction polish ── */
+button { cursor: pointer; }
+[role="button"] { cursor: pointer; }
+a { cursor: pointer; }
+
+/* Nav item: ensure pointer always shows */
+.nav-item { cursor: pointer; }
+
+/* Card interactive: always pointer */
+.card-interactive { cursor: pointer; }
+
+/* Btn micro-feedback */
+.btn:active:not(:disabled) { transform: scale(0.97); }
+
+/* ── Gradient text helpers ── */
+.gradient-brand {
+  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Improved card hover in dark mode ── */
+.card-interactive:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px var(--border-b);
+}
+html.light .card-interactive:hover {
+  box-shadow: 0 4px 16px rgba(99,102,241,0.1), 0 0 0 1px var(--border-b);
 }

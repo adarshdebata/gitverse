@@ -160,13 +160,17 @@ export function SearchBox({ value, onChange, placeholder = "Search...", classNam
             border: "none",
             color: "var(--muted)",
             cursor: "pointer",
-            fontSize: 14,
             padding: "0 2px",
             flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            transition: "color 0.14s ease",
           }}
           title="Clear search"
+          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
         >
-          ✕
+          <XCircle size={14} />
         </button>
       )}
     </div>
@@ -235,7 +239,7 @@ export function Collapsible({ title, icon, children, defaultOpen = false, classN
           textAlign: "left",
           transition: "background 0.15s ease",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--card-h)")}
+        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--card-hover)")}
         onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
       >
         {icon && (
