@@ -1,37 +1,48 @@
 import { NavLink } from "react-router-dom";
+import {
+  Home,
+  BookOpen,
+  Settings2,
+  Terminal,
+  Scale,
+  Gamepad2,
+  BarChart3,
+  GitBranch,
+  LifeBuoy,
+} from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 
 const NAV_SECTIONS = [
   {
     label: "",
-    items: [{ to: "/", icon: "🏠", label: "Home" }],
+    items: [{ to: "/", icon: Home, label: "Home" }],
   },
   {
     label: "Learn",
     items: [
-      { to: "/fundamentals", icon: "📚", label: "Git Fundamentals" },
-      { to: "/internals", icon: "⚙️", label: "Git Internals" },
+      { to: "/fundamentals", icon: BookOpen, label: "Git Fundamentals" },
+      { to: "/internals", icon: Settings2, label: "Git Internals" },
     ],
   },
   {
     label: "Reference",
     items: [
-      { to: "/commands", icon: "💻", label: "Command Reference" },
-      { to: "/compare", icon: "⚖️", label: "Comparisons" },
+      { to: "/commands", icon: Terminal, label: "Command Reference" },
+      { to: "/compare", icon: Scale, label: "Comparisons" },
     ],
   },
   {
     label: "Interactive",
     items: [
-      { to: "/playground", icon: "🎮", label: "Playground" },
-      { to: "/visualizers", icon: "🎨", label: "Visualizers" },
+      { to: "/playground", icon: Gamepad2, label: "Playground" },
+      { to: "/visualizers", icon: BarChart3, label: "Visualizers" },
     ],
   },
   {
     label: "Advanced",
     items: [
-      { to: "/workflows", icon: "🔀", label: "Workflows" },
-      { to: "/recovery", icon: "🛟", label: "Disaster Recovery" },
+      { to: "/workflows", icon: GitBranch, label: "Workflows" },
+      { to: "/recovery", icon: LifeBuoy, label: "Disaster Recovery" },
     ],
   },
 ];
@@ -130,25 +141,30 @@ export default function Sidebar() {
                 {section.label}
               </div>
             )}
-            {section.items.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === "/"}
-                className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-                title={!sidebarOpen ? item.label : undefined}
-              >
-                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
-                {sidebarOpen && (
-                  <span
-                    className="animate-fade-in"
-                    style={{ whiteSpace: "nowrap", overflow: "hidden" }}
-                  >
-                    {item.label}
+            {section.items.map((item) => {
+              const IconComp = item.icon;
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/"}
+                  className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
+                  title={!sidebarOpen ? item.label : undefined}
+                >
+                  <span style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+                    <IconComp size={16} />
                   </span>
-                )}
-              </NavLink>
-            ))}
+                  {sidebarOpen && (
+                    <span
+                      className="animate-fade-in"
+                      style={{ whiteSpace: "nowrap", overflow: "hidden" }}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </NavLink>
+              );
+            })}
           </div>
         ))}
       </nav>

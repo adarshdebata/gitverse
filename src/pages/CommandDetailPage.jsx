@@ -21,6 +21,20 @@ import {
   BisectViz,
   GitObjectModel,
 } from "@/components/visualizers/index.jsx";
+import {
+  Terminal,
+  Search,
+  BarChart3,
+  Settings2,
+  ShieldAlert,
+  Target,
+  CheckCircle,
+  Ban,
+  Sparkles,
+  LifeBuoy,
+  Users,
+  Building2,
+} from "lucide-react";
 
 const VIZ_MAP = {
   staging: StagingViz,
@@ -34,11 +48,11 @@ const VIZ_MAP = {
 };
 
 const TABS = [
-  { id: "overview", label: "Overview", icon: "📋" },
-  { id: "syntax", label: "Syntax", icon: "💻" },
-  { id: "viz", label: "Visualization", icon: "🎨" },
-  { id: "internals", label: "Git Internals", icon: "⚙️" },
-  { id: "pitfalls", label: "Pitfalls & Recovery", icon: "🛡️" },
+  { id: "overview", label: "Overview", icon: <Search size={14} /> },
+  { id: "syntax", label: "Syntax", icon: <Terminal size={14} /> },
+  { id: "viz", label: "Visualization", icon: <BarChart3 size={14} /> },
+  { id: "internals", label: "Git Internals", icon: <Settings2 size={14} /> },
+  { id: "pitfalls", label: "Pitfalls & Recovery", icon: <ShieldAlert size={14} /> },
 ];
 
 export default function CommandDetailPage() {
@@ -51,7 +65,9 @@ export default function CommandDetailPage() {
   if (!cmd) {
     return (
       <div style={{ padding: 40, textAlign: "center" }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🔍</div>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16, color: "var(--muted)" }}>
+          <Search size={48} />
+        </div>
         <h2 className="font-heading" style={{ marginBottom: 12 }}>
           Command not found: {id}
         </h2>
@@ -76,7 +92,9 @@ export default function CommandDetailPage() {
           flexWrap: "wrap",
         }}
       >
-        <div style={{ fontSize: 52 }}>{cmd.emoji}</div>
+        <div style={{ display: "flex", alignItems: "center", color: "var(--accent)" }}>
+          <Terminal size={48} />
+        </div>
 
         <div style={{ flex: 1, minWidth: 240 }}>
           <div
@@ -166,13 +184,13 @@ export default function CommandDetailPage() {
               <button
                 key={r}
                 className="btn"
-                style={{ fontSize: 11, padding: "4px 10px" }}
+                style={{ fontSize: 11, padding: "4px 10px", display: "inline-flex", alignItems: "center", gap: 4 }}
                 onClick={() => {
                   navigate(`/commands/${r}`);
                   setTab("overview");
                 }}
               >
-                {relCmd.emoji} {r}
+                <Terminal size={12} /> {r}
               </button>
             ) : null;
           })}
@@ -187,7 +205,7 @@ export default function CommandDetailPage() {
         <div className="animate-fade-in">
           {/* Purpose */}
           <InfoCard
-            icon="🎯"
+            icon={<Target size={18} />}
             title="Purpose"
             accentColor="var(--accent)"
             style={{ marginBottom: 16 }}
@@ -219,7 +237,9 @@ export default function CommandDetailPage() {
                   fontFamily: "IBM Plex Mono",
                 }}
               >
-                ✅ When to use
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <CheckCircle size={14} /> When to use
+                </span>
               </div>
               {(cmd.when_to_use || []).map((w, i) => (
                 <div
@@ -252,7 +272,9 @@ export default function CommandDetailPage() {
                   fontFamily: "IBM Plex Mono",
                 }}
               >
-                🚫 When NOT to use
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <Ban size={14} /> When NOT to use
+                </span>
               </div>
               {(cmd.when_not_to_use || []).map((w, i) => (
                 <div
@@ -311,7 +333,9 @@ export default function CommandDetailPage() {
                 className="font-heading"
                 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}
               >
-                ✨ Modern Alternatives
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <Sparkles size={14} /> Modern Alternatives
+              </span>
               </h3>
               <div className="gitverse-card" style={{ padding: 16 }}>
                 {cmd.modern_alternatives.map((a, i) => (
@@ -449,7 +473,9 @@ export default function CommandDetailPage() {
           {cmd.enterprise_note && (
             <Alert type="info" style={{ marginBottom: 16 }}>
               <div>
-                <strong style={{ display: "block", marginBottom: 4 }}>🏢 Enterprise note</strong>
+                <strong style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <Building2 size={14} /> Enterprise note
+                </strong>
                 <pre
                   style={{
                     margin: 0,
@@ -471,7 +497,9 @@ export default function CommandDetailPage() {
                 className="font-heading"
                 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}
               >
-                🛟 Recovery Workflows
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <LifeBuoy size={14} /> Recovery Workflows
+              </span>
               </h3>
               {cmd.recovery_workflows.map((r, i) => (
                 <div
@@ -513,7 +541,7 @@ export default function CommandDetailPage() {
           {/* Team workflow */}
           {cmd.team_workflow && (
             <InfoCard
-              icon="👥"
+              icon={<Users size={18} />}
               title="Team Workflow"
               accentColor="var(--purple)"
               style={{ marginTop: 16 }}
@@ -662,7 +690,7 @@ export default function CommandDetailPage() {
       {tab === "internals" && (
         <div className="animate-fade-in">
           <InfoCard
-            icon="⚙️"
+            icon={<Settings2 size={18} />}
             title="Git Internals"
             accentColor="var(--accent)"
             style={{ marginBottom: 20 }}
@@ -767,7 +795,9 @@ ls .git/refs/heads/         # see all branch refs`}
                 className="font-heading"
                 style={{ fontSize: 15, fontWeight: 700, marginBottom: 12 }}
               >
-                🛟 Recovery Path
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <LifeBuoy size={14} /> Recovery Path
+              </span>
               </h3>
               <div
                 className="gitverse-card"

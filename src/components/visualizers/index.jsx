@@ -1,4 +1,14 @@
 import { useState } from "react";
+import {
+  FolderOpen,
+  ClipboardList,
+  Database,
+  Tag,
+  Archive,
+  FileText,
+  GitCommit,
+  Bug,
+} from "lucide-react";
 import CommitGraph from "@/components/graphs/CommitGraph";
 import { Alert, Badge, CodeBlock, StepProgress, VizCanvas } from "@/components/ui/index.jsx";
 
@@ -86,9 +96,12 @@ export function StagingViz() {
           textTransform: "uppercase",
           letterSpacing: "0.06em",
           transition: "color 0.4s ease",
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
         }}
       >
-        {icon} {label}
+        <span style={{ display: "flex", alignItems: "center" }}>{icon}</span> {label}
       </div>
       {files.length === 0 ? (
         <div style={{ color: "var(--dim)", fontSize: 11, fontFamily: "IBM Plex Mono" }}>
@@ -146,7 +159,7 @@ export function StagingViz() {
       >
         <Zone
           label="Working Directory"
-          icon="📁"
+          icon={<FolderOpen size={14} />}
           color="var(--cyan)"
           files={s.working}
           placeholder="(clean)"
@@ -167,7 +180,7 @@ export function StagingViz() {
         </div>
         <Zone
           label="Staging Area (Index)"
-          icon="📋"
+          icon={<ClipboardList size={14} />}
           color="var(--accent)"
           files={s.staged}
           placeholder="(empty)"
@@ -188,7 +201,7 @@ export function StagingViz() {
         </div>
         <Zone
           label="Repository (.git)"
-          icon="🗄️"
+          icon={<Database size={14} />}
           color="var(--emerald)"
           files={s.history}
           placeholder="(no commits)"
@@ -234,7 +247,7 @@ const REBASE_STEPS = [
     scenario: "rebase_after",
     callout: {
       type: "warn",
-      text: "⚠️ SHAs changed — git push --force-with-lease required if already pushed.",
+      text: "SHAs changed — git push --force-with-lease required if already pushed.",
     },
   },
 ];
@@ -322,8 +335,8 @@ const RESET_MODE_DATA = {
   "--hard": {
     head: { label: "HEAD", affected: true, result: "Moved back 1 commit" },
     index: { label: "Index (Staging)", affected: true, result: "Reset to HEAD — staging cleared" },
-    working: { label: "Working Tree", affected: true, result: "⚠️ Reset to HEAD — CHANGES LOST" },
-    desc: "⚠️ DESTRUCTIVE: Moves HEAD, resets staging, resets all files. Changes are gone.",
+    working: { label: "Working Tree", affected: true, result: "Reset to HEAD — CHANGES LOST" },
+    desc: "DESTRUCTIVE: Moves HEAD, resets staging, resets all files. Changes are gone.",
     use: "Sync to remote, discard all local divergence. Emergency cleanup.",
     danger: "high",
     cmd: "git reset --hard HEAD~1",
@@ -344,7 +357,7 @@ export function ResetViz() {
         transition: "all 0.3s ease",
       }}
     >
-      <span style={{ fontSize: 22, flexShrink: 0 }}>{icon}</span>
+      <span style={{ display: "flex", alignItems: "center", flexShrink: 0, color: "var(--muted)" }}>{icon}</span>
       <div
         className="gitverse-card"
         style={{
@@ -407,9 +420,9 @@ export function ResetViz() {
 
       {/* Three-tree visualization */}
       <div style={{ marginBottom: 16 }}>
-        <TreeLayer layer={data.head} icon="🏷️" />
-        <TreeLayer layer={data.index} icon="📋" />
-        <TreeLayer layer={data.working} icon="📁" />
+        <TreeLayer layer={data.head} icon={<Tag size={20} />} />
+        <TreeLayer layer={data.index} icon={<ClipboardList size={20} />} />
+        <TreeLayer layer={data.working} icon={<FolderOpen size={20} />} />
       </div>
 
       <div
@@ -515,9 +528,12 @@ export function StashViz() {
               fontFamily: "IBM Plex Mono",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
             }}
           >
-            🗃️ Stash Stack
+            <Archive size={14} /> Stash Stack
           </div>
           {s.stash.length === 0 ? (
             <div style={{ color: "var(--dim)", fontSize: 11, fontFamily: "IBM Plex Mono" }}>
@@ -557,9 +573,12 @@ export function StashViz() {
               fontFamily: "IBM Plex Mono",
               textTransform: "uppercase",
               letterSpacing: "0.06em",
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
             }}
           >
-            📁 Working Tree ({s.branch})
+            <FolderOpen size={14} /> Working Tree ({s.branch})
           </div>
           {s.working.length === 0 ? (
             <div style={{ color: "var(--emerald)", fontSize: 11, fontFamily: "IBM Plex Mono" }}>
@@ -1021,7 +1040,11 @@ export function BisectViz() {
               {isMidpoint && !isBadMarked && !isCulprit && (
                 <div style={{ color: "var(--accent)", fontSize: 8 }}>← test</div>
               )}
-              {isCulprit && <div style={{ color: "var(--rose)", fontSize: 8 }}>🐛 BUG</div>}
+              {isCulprit && (
+                <div style={{ color: "var(--rose)", fontSize: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
+                  <Bug size={8} /> BUG
+                </div>
+              )}
             </div>
           );
         })}
@@ -1073,7 +1096,7 @@ export function GitObjectModel() {
       id: "blob",
       type: "blob",
       color: "var(--cyan)",
-      icon: "📄",
+      icon: <FileText size={18} />,
       title: "BLOB (Binary Large Object)",
       sha: "a1b2c3d4",
       content: `type blob
@@ -1088,7 +1111,7 @@ const jwt = require('jsonwebtoken')
       id: "tree",
       type: "tree",
       color: "var(--emerald)",
-      icon: "📁",
+      icon: <FolderOpen size={18} />,
       title: "TREE",
       sha: "b2c3d4e5",
       content: `type tree
@@ -1103,7 +1126,7 @@ const jwt = require('jsonwebtoken')
       id: "commit",
       type: "commit",
       color: "var(--accent)",
-      icon: "💾",
+      icon: <GitCommit size={18} />,
       title: "COMMIT",
       sha: "c3d4e5f6",
       content: `type commit
@@ -1120,7 +1143,7 @@ feat: add JWT authentication`,
       id: "tag",
       type: "tag",
       color: "var(--purple)",
-      icon: "🏷️",
+      icon: <Tag size={18} />,
       title: "ANNOTATED TAG",
       sha: "d4e5f6g7",
       content: `type tag
@@ -1150,7 +1173,7 @@ Release v2.0.0 - JWT Authentication`,
             onClick={() => setSelected(selected === obj.id ? null : obj.id)}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 18 }}>{obj.icon}</span>
+              <span style={{ display: "flex", alignItems: "center", color: obj.color }}>{obj.icon}</span>
               <span
                 style={{
                   fontSize: 10,
@@ -1181,9 +1204,10 @@ Release v2.0.0 - JWT Authentication`,
         >
           <div
             className="font-heading"
-            style={{ fontWeight: 700, fontSize: 15, marginBottom: 12, color: selected_obj.color }}
+            style={{ fontWeight: 700, fontSize: 15, marginBottom: 12, color: selected_obj.color, display: "flex", alignItems: "center", gap: 8 }}
           >
-            {selected_obj.icon} {selected_obj.title}
+            <span style={{ display: "flex", alignItems: "center" }}>{selected_obj.icon}</span>
+            {selected_obj.title}
           </div>
           <CodeBlock code={selected_obj.content} style={{ marginBottom: 12 }} />
           <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.75 }}>

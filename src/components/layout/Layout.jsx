@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Menu, Sun, Moon } from "lucide-react";
 import Sidebar from "./Sidebar";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -42,7 +43,7 @@ function TopBar() {
         onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
       >
-        ☰
+        <Menu size={18} />
       </button>
 
       {/* Quick nav bar */}
@@ -106,7 +107,7 @@ function TopBar() {
           e.currentTarget.style.color = "var(--muted)";
         }}
       >
-        {theme === "dark" ? "☀️" : "🌙"}
+        {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
       </button>
     </header>
   );

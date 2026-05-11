@@ -22,17 +22,22 @@ export function Badge({ variant = "accent", children, className = "" }) {
 // ============================================================
 // Alert
 // ============================================================
+import { Info, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+
 const ALERT_ICONS = {
-  info: "ℹ️",
-  warn: "⚠️",
-  danger: "🚨",
-  success: "✅",
+  info: Info,
+  warn: AlertTriangle,
+  danger: XCircle,
+  success: CheckCircle,
 };
 
 export function Alert({ type = "info", children, className = "" }) {
+  const IconComp = ALERT_ICONS[type] || Info;
   return (
     <div className={`alert alert-${type} ${className}`}>
-      <span style={{ fontSize: 16, flexShrink: 0 }}>{ALERT_ICONS[type]}</span>
+      <span style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+        <IconComp size={16} />
+      </span>
       <div>{children}</div>
     </div>
   );
@@ -42,6 +47,7 @@ export function Alert({ type = "info", children, className = "" }) {
 // CodeBlock
 // ============================================================
 import { useState } from "react";
+import { Search } from "lucide-react";
 
 function syntaxHighlight(line) {
   if (!line) return "";
@@ -121,7 +127,7 @@ export function Tabs({ tabs, activeTab, onTabChange, className = "" }) {
           className={`tab-item ${activeTab === tab.id ? "active" : ""}`}
           onClick={() => onTabChange(tab.id)}
         >
-          {tab.icon && <span style={{ marginRight: 5 }}>{tab.icon}</span>}
+          {tab.icon && <span style={{ marginRight: 5, display: "inline-flex", alignItems: "center" }}>{tab.icon}</span>}
           {tab.label}
         </button>
       ))}
@@ -135,7 +141,9 @@ export function Tabs({ tabs, activeTab, onTabChange, className = "" }) {
 export function SearchBox({ value, onChange, placeholder = "Search...", className = "" }) {
   return (
     <div className={`search-box ${className}`}>
-      <span style={{ color: "var(--muted)", fontSize: 16, flexShrink: 0 }}>🔍</span>
+      <span style={{ color: "var(--muted)", display: "flex", alignItems: "center", flexShrink: 0 }}>
+        <Search size={16} />
+      </span>
       <input
         type="text"
         value={value}
@@ -230,7 +238,9 @@ export function Collapsible({ title, icon, children, defaultOpen = false, classN
         onMouseEnter={(e) => (e.currentTarget.style.background = "var(--card-h)")}
         onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
       >
-        {icon && <span style={{ fontSize: 20 }}>{icon}</span>}
+        {icon && (
+          <span style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>{icon}</span>
+        )}
         <span className="font-heading" style={{ fontWeight: 600, fontSize: 14, flex: 1 }}>
           {title}
         </span>
@@ -389,7 +399,9 @@ export function InfoCard({ icon, title, children, accentColor = "var(--accent)",
           marginBottom: 8,
         }}
       >
-        {icon && <span style={{ fontSize: 18 }}>{icon}</span>}
+        {icon && (
+          <span style={{ display: "flex", alignItems: "center" }}>{icon}</span>
+        )}
         <span>{title}</span>
       </div>
       <div style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.75 }}>{children}</div>

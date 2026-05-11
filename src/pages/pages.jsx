@@ -1,6 +1,33 @@
 // ============================================================
 // FundamentalsPage
 // ============================================================
+import {
+  ScrollText,
+  Building2,
+  Zap,
+  GitBranch,
+  Package,
+  Database,
+  KeyRound,
+  RefreshCw,
+  Settings2,
+  GitMerge,
+  Layers,
+  Globe,
+  RotateCcw,
+  BookMarked,
+  Archive,
+  Search,
+  Microscope,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
+  ShieldAlert,
+  Wrench,
+  Ban,
+  LifeBuoy,
+  AlertTriangle,
+} from "lucide-react";
 import { SectionHeader, Collapsible, Alert, CodeBlock, InfoCard } from "@/components/ui/index.jsx";
 
 export function FundamentalsPage() {
@@ -12,18 +39,18 @@ export function FundamentalsPage() {
         badge="foundations"
       />
 
-      <Collapsible icon="📜" title="What is Version Control?" defaultOpen>
+      <Collapsible icon={<ScrollText size={18} />} title="What is Version Control?" defaultOpen>
         <p style={{ marginBottom: 12 }}>
           Version control is a system that records changes to files over time, enabling you to
           recall specific versions later and understand who changed what, when, and why.
         </p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-          <InfoCard icon="🏛️" title="Before Git (CVS, SVN)" accentColor="var(--rose)">
+          <InfoCard icon={<Building2 size={18} />} title="Before Git (CVS, SVN)" accentColor="var(--rose)">
             Centralized server holds all history. Developers check out snapshots. Requires network
             for most operations. Single point of failure. Lock-based workflow. Offline work
             impossible.
           </InfoCard>
-          <InfoCard icon="⚡" title="Git (Distributed)" accentColor="var(--emerald)">
+          <InfoCard icon={<Zap size={18} />} title="Git (Distributed)" accentColor="var(--emerald)">
             Every clone IS the full repository with complete history. Offline commits, branches,
             merges all work locally. Multiple remotes. No single point of failure. Peer-to-peer
             capable.
@@ -34,7 +61,7 @@ export function FundamentalsPage() {
         </p>
       </Collapsible>
 
-      <Collapsible icon="🌐" title="Distributed vs Centralized VCS">
+      <Collapsible icon={<Globe size={18} />} title="Distributed vs Centralized VCS">
         <Alert type="info" style={{ marginBottom: 12 }}>
           In Git, "origin" is just a named remote — a convention, not a special server. You can push
           to multiple remotes, pull from peers, and work entirely offline indefinitely.
@@ -51,7 +78,7 @@ git fetch upstream && git rebase upstream/main`}
         />
       </Collapsible>
 
-      <Collapsible icon="🔄" title="The Three States of Git">
+      <Collapsible icon={<RefreshCw size={18} />} title="The Three States of Git">
         <p style={{ marginBottom: 16 }}>Every tracked file in Git lives in one of three states:</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 16 }}>
           {[
@@ -87,7 +114,7 @@ git fetch upstream && git rebase upstream/main`}
         </p>
       </Collapsible>
 
-      <Collapsible icon="📍" title="Understanding HEAD — The Key Pointer">
+      <Collapsible icon={<BookMarked size={18} />} title="Understanding HEAD — The Key Pointer">
         <p style={{ color: "var(--muted)", marginBottom: 12 }}>
           HEAD is a special reference that points to the current commit. Most of the time, HEAD is
           "attached" to a branch (pointing to the branch ref, which points to a commit).
@@ -114,7 +141,7 @@ abc123def456...          ← points directly to commit SHA
         </Alert>
       </Collapsible>
 
-      <Collapsible icon="⚙️" title="Git Configuration Hierarchy">
+      <Collapsible icon={<Settings2 size={18} />} title="Git Configuration Hierarchy">
         <CodeBlock
           code={`# Three levels — each overrides the previous:
 
@@ -143,7 +170,7 @@ git config --global alias.recent "branch --sort=-committerdate"`}
         />
       </Collapsible>
 
-      <Collapsible icon="🔑" title="SSH vs HTTPS Authentication">
+      <Collapsible icon={<KeyRound size={18} />} title="SSH vs HTTPS Authentication">
         <CodeBlock
           code={`# HTTPS (password/token-based)
 git clone https://github.com/company/repo.git
@@ -178,11 +205,11 @@ import { useState } from "react";
 export function InternalsPage() {
   const [tab, setTab] = useState("objects");
   const tabs = [
-    { id: "objects", label: "Object Model", icon: "📦" },
-    { id: "refs", label: "References", icon: "🔗" },
-    { id: "index", label: "The Index", icon: "📋" },
-    { id: "packfiles", label: "Packfiles & GC", icon: "📦" },
-    { id: "hooks", label: "Git Hooks", icon: "🪝" },
+    { id: "objects", label: "Object Model", icon: <Layers size={14} /> },
+    { id: "refs", label: "References", icon: <GitBranch size={14} /> },
+    { id: "index", label: "The Index", icon: <Package size={14} /> },
+    { id: "packfiles", label: "Packfiles & GC", icon: <Archive size={14} /> },
+    { id: "hooks", label: "Git Hooks", icon: <Settings2 size={14} /> },
   ];
 
   return (
@@ -203,7 +230,7 @@ export function InternalsPage() {
           </Alert>
           <GitObjectModel />
           <div style={{ marginTop: 20 }}>
-            <InfoCard icon="🔐" title="SHA-1 Content Addressing" accentColor="var(--amber)">
+            <InfoCard icon={<KeyRound size={18} />} title="SHA-1 Content Addressing" accentColor="var(--amber)">
               <p>
                 Git computes: <code>SHA1("blob " + size + "\0" + content)</code>
               </p>
@@ -307,7 +334,7 @@ git ls-files --stage
             style={{ marginBottom: 16 }}
           />
           <InfoCard
-            icon="💡"
+            icon={<Lightbulb size={18} />}
             title="Why the Index enables selective staging"
             accentColor="var(--cyan)"
           >
@@ -350,11 +377,11 @@ git gc --dry-run`}
             style={{ marginBottom: 16 }}
           />
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <InfoCard icon="📄" title="Loose Objects" accentColor="var(--cyan)">
+            <InfoCard icon={<Database size={18} />} title="Loose Objects" accentColor="var(--cyan)">
               Each object is a separate compressed file in .git/objects/ab/cdef... Created
               immediately on git add/commit. Git auto-packs when count exceeds ~6700.
             </InfoCard>
-            <InfoCard icon="📦" title="Packed Objects" accentColor="var(--emerald)">
+            <InfoCard icon={<Archive size={18} />} title="Packed Objects" accentColor="var(--emerald)">
               .pack + .idx file pairs. Delta compression against similar blobs. The .idx allows
               O(log n) lookup by SHA. Dramatically reduces disk usage.
             </InfoCard>
@@ -553,7 +580,7 @@ export function WorkflowsPage() {
                 When to Use GitFlow
               </h3>
               <InfoCard
-                icon="✅"
+                icon={<CheckCircle size={18} />}
                 title="Good fit"
                 accentColor="var(--emerald)"
                 style={{ marginBottom: 10 }}
@@ -561,7 +588,7 @@ export function WorkflowsPage() {
                 Scheduled releases. Multiple versions maintained. Large teams with dedicated
                 QA/release cycles. Mobile apps. Packaged software. Versioned public APIs.
               </InfoCard>
-              <InfoCard icon="❌" title="Poor fit" accentColor="var(--rose)">
+              <InfoCard icon={<XCircle size={18} />} title="Poor fit" accentColor="var(--rose)">
                 SaaS / continuous delivery. Small teams. Rapid iteration. Overhead outweighs
                 benefits. Leads to long-lived merge-conflict-prone branches.
               </InfoCard>
@@ -590,7 +617,7 @@ git flow release finish v2.0.0    # merges to main + develop, creates tag`}
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
           >
-            <InfoCard icon="⚡" title="Core Principles" accentColor="var(--emerald)">
+            <InfoCard icon={<Zap size={18} />} title="Core Principles" accentColor="var(--emerald)">
               • Short-lived branches (&lt;1 day ideally)
               <br />
               • Commit to main at least daily
@@ -602,7 +629,7 @@ git flow release finish v2.0.0    # merges to main + develop, creates tag`}
               • No long-lived feature branches
               <br />• Pair programming or pair reviews
             </InfoCard>
-            <InfoCard icon="🔧" title="Required Infrastructure" accentColor="var(--accent)">
+            <InfoCard icon={<Wrench size={18} />} title="Required Infrastructure" accentColor="var(--accent)">
               • Fast automated test suite (&lt;10 min)
               <br />
               • Feature toggle system (LaunchDarkly, etc.)
@@ -851,12 +878,12 @@ packages/shared/          @architecture @frontend-team
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
           >
-            <InfoCard icon="🚫" title="--force (dangerous)" accentColor="var(--rose)">
+            <InfoCard icon={<Ban size={18} />} title="--force (dangerous)" accentColor="var(--rose)">
               Overwrites remote regardless of its current state. If a teammate pushed after your
               last fetch, their commits are gone. The only safe use is on your personal fork where
               you're the only committer.
             </InfoCard>
-            <InfoCard icon="✅" title="--force-with-lease (safe)" accentColor="var(--emerald)">
+            <InfoCard icon={<CheckCircle size={18} />} title="--force-with-lease (safe)" accentColor="var(--emerald)">
               Checks that the remote hasn't changed since you last fetched. If someone else pushed,
               your push is rejected with a clear error. Use this for all force pushes without
               exception.
@@ -891,7 +918,7 @@ git config --global alias.fpush "push --force-with-lease"
 export function RecoveryPage() {
   const scenarios = [
     {
-      icon: "💥",
+      icon: "reset-hard",
       title: "Accidental git reset --hard",
       severity: "critical",
       steps: [
@@ -903,7 +930,7 @@ export function RecoveryPage() {
       cmd: `git reflog\n# Find: HEAD@{2}: commit: your last good commit\ngit reset --hard HEAD@{2}\n# Or create a rescue branch:\ngit checkout -b rescue HEAD@{2}`,
     },
     {
-      icon: "🗑️",
+      icon: "deleted-branch",
       title: "Deleted branch (not pushed)",
       severity: "high",
       steps: [
@@ -914,7 +941,7 @@ export function RecoveryPage() {
       cmd: `git reflog --all | grep "branch-name"\n# Or search all: git reflog | grep "commit:"\ngit checkout -b recovered-feature abc123d\ngit push -u origin recovered-feature`,
     },
     {
-      icon: "🔀",
+      icon: "force-push",
       title: "Force-pushed over teammate's work",
       severity: "critical",
       steps: [
@@ -931,7 +958,7 @@ git push --force-with-lease origin main  # not --force
 # Then you: git pull --rebase origin main`,
     },
     {
-      icon: "📌",
+      icon: "detached-head",
       title: "Lost commits in detached HEAD state",
       severity: "medium",
       steps: [
@@ -942,7 +969,7 @@ git push --force-with-lease origin main  # not --force
       cmd: `git reflog\n# Find: HEAD@{3}: commit: my-important-work\ngit switch -c rescue-branch HEAD@{3}\n# Commits are now on rescue-branch — safe!`,
     },
     {
-      icon: "🔀",
+      icon: "bad-merge",
       title: "Reverting a bad merge commit",
       severity: "medium",
       steps: [
@@ -954,16 +981,16 @@ git push --force-with-lease origin main  # not --force
       cmd: `git log --oneline --graph | grep "Merge"\ngit revert -m 1 abc123merge\ngit push origin main\n\n# Later, to re-apply the merged branch:\ngit revert <revert-of-merge-sha>  # revert the revert\ngit merge feature-branch          # now merge cleanly`,
     },
     {
-      icon: "🔐",
-      title: "⚠️ Accidentally committed secrets/credentials",
+      icon: "secrets",
+      title: "Accidentally committed secrets/credentials",
       severity: "critical",
       steps: [
-        "1️⃣ IMMEDIATELY rotate the exposed credential (assume compromised)",
-        "2️⃣ Install git-filter-repo: pip install git-filter-repo",
-        "3️⃣ git filter-repo --invert-paths --path secrets.env (rewrites ALL history)",
-        "4️⃣ git push --force-with-lease --all  (update all branches)",
-        "5️⃣ Notify ALL collaborators to delete and re-clone",
-        "6️⃣ Add to .gitignore immediately to prevent recurrence",
+        "IMMEDIATELY rotate the exposed credential (assume compromised)",
+        "Install git-filter-repo: pip install git-filter-repo",
+        "git filter-repo --invert-paths --path secrets.env (rewrites ALL history)",
+        "git push --force-with-lease --all  (update all branches)",
+        "Notify ALL collaborators to delete and re-clone",
+        "Add to .gitignore immediately to prevent recurrence",
       ],
       cmd: `# Step 1: ROTATE THE CREDENTIAL NOW (before anything else)
 
@@ -987,6 +1014,19 @@ echo "*.pem" >> .gitignore
   ];
 
   const severityColor = { critical: "var(--rose)", high: "var(--amber)", medium: "var(--cyan)" };
+
+  const scenarioIcon = (iconKey, color) => {
+    const iconProps = { size: 24, style: { color } };
+    const map = {
+      "reset-hard": <RotateCcw {...iconProps} />,
+      "deleted-branch": <GitBranch {...iconProps} />,
+      "force-push": <ShieldAlert {...iconProps} />,
+      "detached-head": <BookMarked {...iconProps} />,
+      "bad-merge": <GitMerge {...iconProps} />,
+      "secrets": <KeyRound {...iconProps} />,
+    };
+    return map[iconKey] || <AlertTriangle {...iconProps} />;
+  };
 
   return (
     <div className="animate-fade-up">
@@ -1013,7 +1053,9 @@ echo "*.pem" >> .gitignore
             style={{ padding: 20, borderLeft: `3px solid ${severityColor[s.severity]}` }}
           >
             <div style={{ display: "flex", alignItems: "flex-start", gap: 14, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 28, flexShrink: 0 }}>{s.icon}</span>
+              <span style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
+                {scenarioIcon(s.icon, severityColor[s.severity])}
+              </span>
               <div style={{ flex: 1, minWidth: 240 }}>
                 <div
                   style={{
@@ -1274,14 +1316,14 @@ import {
 export function VisualizersPage() {
   const [active, setActive] = useState("staging");
   const items = [
-    { id: "staging", label: "Staging Area", icon: "📦", Comp: StagingViz },
-    { id: "rebase", label: "Rebase", icon: "🔁", Comp: RebaseViz },
-    { id: "reset", label: "Reset Modes", icon: "⏪", Comp: ResetViz },
-    { id: "stash", label: "Stash", icon: "🗃️", Comp: StashViz },
-    { id: "reflog", label: "Reflog", icon: "🔍", Comp: ReflogViz },
-    { id: "merge", label: "Merge Conflict", icon: "⚔️", Comp: MergeConflictViz },
-    { id: "bisect", label: "Bisect", icon: "🔬", Comp: BisectViz },
-    { id: "objects", label: "Object Model", icon: "⚙️", Comp: GitObjectModel },
+    { id: "staging", label: "Staging Area", icon: <Package size={14} />, Comp: StagingViz },
+    { id: "rebase", label: "Rebase", icon: <RefreshCw size={14} />, Comp: RebaseViz },
+    { id: "reset", label: "Reset Modes", icon: <RotateCcw size={14} />, Comp: ResetViz },
+    { id: "stash", label: "Stash", icon: <Archive size={14} />, Comp: StashViz },
+    { id: "reflog", label: "Reflog", icon: <Search size={14} />, Comp: ReflogViz },
+    { id: "merge", label: "Merge Conflict", icon: <GitMerge size={14} />, Comp: MergeConflictViz },
+    { id: "bisect", label: "Bisect", icon: <Microscope size={14} />, Comp: BisectViz },
+    { id: "objects", label: "Object Model", icon: <Layers size={14} />, Comp: GitObjectModel },
   ];
 
   const ActiveComp = items.find((i) => i.id === active)?.Comp;

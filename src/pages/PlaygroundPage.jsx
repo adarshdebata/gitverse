@@ -10,15 +10,26 @@ import {
   BisectViz,
 } from "@/components/visualizers/index.jsx";
 import { getBranchColor } from "@/data/graphs";
+import {
+  Terminal,
+  GitBranch,
+  RefreshCw,
+  RotateCcw,
+  Archive,
+  GitMerge,
+  Microscope,
+  BookOpen,
+  BarChart3,
+} from "lucide-react";
 
 const TABS = [
-  { id: "terminal", label: "Terminal", icon: "💻" },
-  { id: "graph", label: "Commit Graph", icon: "🌿" },
-  { id: "rebase", label: "Rebase Sim", icon: "🔁" },
-  { id: "reset", label: "Reset Sim", icon: "⏪" },
-  { id: "stash", label: "Stash Sim", icon: "🗃️" },
-  { id: "merge", label: "Merge Conflict", icon: "⚔️" },
-  { id: "bisect", label: "Bisect Debugger", icon: "🔬" },
+  { id: "terminal", label: "Terminal", icon: <Terminal size={14} /> },
+  { id: "graph", label: "Commit Graph", icon: <GitBranch size={14} /> },
+  { id: "rebase", label: "Rebase Sim", icon: <RefreshCw size={14} /> },
+  { id: "reset", label: "Reset Sim", icon: <RotateCcw size={14} /> },
+  { id: "stash", label: "Stash Sim", icon: <Archive size={14} /> },
+  { id: "merge", label: "Merge Conflict", icon: <GitMerge size={14} /> },
+  { id: "bisect", label: "Bisect Debugger", icon: <Microscope size={14} /> },
 ];
 
 export default function PlaygroundPage() {
@@ -57,9 +68,12 @@ export default function PlaygroundPage() {
                   fontFamily: "IBM Plex Mono",
                   textTransform: "uppercase",
                   letterSpacing: "0.06em",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
                 }}
               >
-                📖 Tips
+                <BookOpen size={14} /> Tips
               </div>
               <div
                 style={{
@@ -163,9 +177,12 @@ function RepoStatePanel({ expanded = false }) {
           fontFamily: "IBM Plex Mono",
           textTransform: "uppercase",
           letterSpacing: "0.06em",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
         }}
       >
-        📊 Repository State
+        <BarChart3 size={14} /> Repository State
       </div>
 
       {/* Branch */}

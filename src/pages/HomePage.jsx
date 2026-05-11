@@ -1,4 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import {
+  GitBranch,
+  Zap,
+  Gamepad2,
+  LifeBuoy,
+  Scale,
+  BookOpen,
+  Settings2,
+  Terminal,
+  GitCommit,
+} from "lucide-react";
 import CommitGraph from "@/components/graphs/CommitGraph";
 import { Badge, Alert } from "@/components/ui/index.jsx";
 import { getAllCommands } from "@/data/commands";
@@ -14,42 +25,42 @@ const FEATURED_IDS = ["rebase", "reset", "reflog", "cherry-pick"];
 
 const PATHS = [
   {
-    icon: "🌱",
+    Icon: GitBranch,
     title: "Git Foundations",
     desc: "Object model, SHA hashes, the three trees. Understand what Git actually does.",
     color: "var(--emerald)",
     path: "/fundamentals",
   },
   {
-    icon: "⚡",
+    Icon: Zap,
     title: "Command Mastery",
     desc: "Every command with animated before/after states, internals, and recovery paths.",
     color: "var(--accent)",
     path: "/commands",
   },
   {
-    icon: "🎮",
+    Icon: Gamepad2,
     title: "Interactive Playground",
     desc: "Type real Git commands in a simulated terminal. See the commit graph update live.",
     color: "var(--cyan)",
     path: "/playground",
   },
   {
-    icon: "🛟",
+    Icon: LifeBuoy,
     title: "Disaster Recovery",
     desc: "Step-by-step guides for every Git catastrophe. Bookmark this page.",
     color: "var(--rose)",
     path: "/recovery",
   },
   {
-    icon: "🔀",
+    Icon: GitBranch,
     title: "Workflows",
     desc: "GitFlow, trunk-based dev, monorepos, Conventional Commits, merge strategies.",
     color: "var(--purple)",
     path: "/workflows",
   },
   {
-    icon: "⚖️",
+    Icon: Scale,
     title: "Comparisons",
     desc: "merge vs rebase, reset vs revert, switch vs checkout, GitHub vs GitLab.",
     color: "var(--amber)",
@@ -130,24 +141,24 @@ export default function HomePage() {
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button
               className="btn btn-primary"
-              style={{ padding: "10px 22px", fontSize: 13 }}
+              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
               onClick={() => navigate("/playground")}
             >
-              ⚡ Open Playground
+              <Zap size={14} /> Open Playground
             </button>
             <button
               className="btn"
-              style={{ padding: "10px 22px", fontSize: 13 }}
+              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
               onClick={() => navigate("/commands")}
             >
-              📚 Command Reference
+              <BookOpen size={14} /> Command Reference
             </button>
             <button
               className="btn"
-              style={{ padding: "10px 22px", fontSize: 13 }}
+              style={{ padding: "10px 22px", fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}
               onClick={() => navigate("/internals")}
             >
-              ⚙️ Git Internals
+              <Settings2 size={14} /> Git Internals
             </button>
           </div>
         </div>
@@ -264,7 +275,9 @@ export default function HomePage() {
               onClick={() => navigate(`/commands/${cmd.id}`)}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                <span style={{ fontSize: 26 }}>{cmd.emoji}</span>
+                <span style={{ display: "flex", alignItems: "center", color: "var(--accent)" }}>
+                  <Terminal size={26} />
+                </span>
                 <div>
                   <div className="font-heading" style={{ fontSize: 16, fontWeight: 700 }}>
                     {cmd.name}
@@ -307,7 +320,9 @@ export default function HomePage() {
               style={{ padding: 18 }}
               onClick={() => navigate(p.path)}
             >
-              <div style={{ fontSize: 30, marginBottom: 12 }}>{p.icon}</div>
+              <div style={{ marginBottom: 12, color: p.color }}>
+                <p.Icon size={28} />
+              </div>
               <div
                 className="font-heading"
                 style={{ fontWeight: 700, fontSize: 15, marginBottom: 8, color: p.color }}

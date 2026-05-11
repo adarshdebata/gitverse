@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { layoutGraph, buildEdgePath, getGraphBounds, getBranchColor, GRAPHS } from "@/data/graphs";
+// Cherry indicator uses SVG text instead of emoji for cross-platform consistency
 
 const NODE_R = 9;
 const HEAD_R = 11;
@@ -123,9 +124,27 @@ function CommitNode({ node, isHead, isSelected, onClick, animated, delay = 0 }) 
 
       {/* Cherry indicator */}
       {(node.cherry || node.cherry_dest) && (
-        <text x={node.x + 12} y={node.y - 10} fontSize={10} style={{ pointerEvents: "none" }}>
-          🍒
-        </text>
+        <g>
+          <circle
+            cx={node.x + 12}
+            cy={node.y - 10}
+            r={5}
+            fill="var(--rose)"
+            opacity={0.85}
+            style={{ pointerEvents: "none" }}
+          />
+          <text
+            x={node.x + 12}
+            y={node.y - 7}
+            textAnchor="middle"
+            fontSize={7}
+            fill="white"
+            fontWeight="700"
+            style={{ pointerEvents: "none", userSelect: "none" }}
+          >
+            C
+          </text>
+        </g>
       )}
 
       <title>{node.message || node.id}</title>

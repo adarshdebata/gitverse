@@ -2,8 +2,16 @@ import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store/useAppStore";
 import { getAllCommands, CATEGORIES, searchCommands } from "@/data/commands";
 import { Badge, SearchBox, SectionHeader } from "@/components/ui/index.jsx";
+import { Search, Terminal, GitBranch, RotateCcw, LifeBuoy } from "lucide-react";
 
 const DIFFICULTY_ORDER = { beginner: 0, intermediate: 1, advanced: 2 };
+
+const CATEGORY_ICONS = {
+  daily: <Terminal size={16} />,
+  advanced: <GitBranch size={16} />,
+  legacy: <RotateCcw size={16} />,
+  recovery: <LifeBuoy size={16} />,
+};
 
 export default function CommandsPage() {
   const navigate = useNavigate();
@@ -49,7 +57,9 @@ export default function CommandsPage() {
             color: "var(--muted)",
           }}
         >
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
+            <Search size={32} />
+          </div>
           <div>No commands found for "{searchQuery}"</div>
           <button className="btn" style={{ marginTop: 14 }} onClick={() => setSearchQuery("")}>
             Clear search
@@ -60,7 +70,7 @@ export default function CommandsPage() {
       {categoryOrder.map((cat) => {
         const cmds = grouped[cat];
         if (!cmds || cmds.length === 0) return null;
-        const catMeta = CATEGORIES[cat] || { label: cat, icon: "📄" };
+        const catMeta = CATEGORIES[cat] || { label: cat };
 
         return (
           <div key={cat} style={{ marginBottom: 36 }}>
@@ -72,7 +82,9 @@ export default function CommandsPage() {
                 marginBottom: 16,
               }}
             >
-              <span style={{ fontSize: 16 }}>{catMeta.icon}</span>
+              <span style={{ display: "flex", alignItems: "center", color: "var(--muted)" }}>
+                {CATEGORY_ICONS[cat] || <Terminal size={16} />}
+              </span>
               <span
                 style={{
                   fontSize: 11,
@@ -122,7 +134,9 @@ function CommandCard({ cmd, onClick }) {
   return (
     <div className="gitverse-card-interactive" style={{ padding: 18 }} onClick={onClick}>
       <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-        <span style={{ fontSize: 26, flexShrink: 0 }}>{cmd.emoji}</span>
+        <span style={{ flexShrink: 0, display: "flex", alignItems: "center", color: "var(--accent)", paddingTop: 2 }}>
+          <Terminal size={24} />
+        </span>
 
         <div style={{ flex: 1, minWidth: 0 }}>
           {/* Name + badges */}
