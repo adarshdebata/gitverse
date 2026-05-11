@@ -20,9 +20,6 @@ import {
   Microscope,
   BookOpen,
   BarChart3,
-  GitCommit,
-  ArrowUp,
-  ArrowDown,
 } from "lucide-react";
 
 const TABS = [
@@ -45,8 +42,49 @@ const TAB_DESCRIPTIONS = {
   bisect:   "Binary-search through commits to find the bug with git bisect.",
 };
 
+/**
+ * Converts live repoState into a CommitGraph-compatible customGraph object.
+ * Each commit carries a `branch` field so the graph correctly color-codes lanes.
+ */
+function buildLiveGraph(repoState) {
+  const { commits, branches, branch: currentBranch, head } = repoState;
+  if (!commits || commits.length === 0) return null;
+
+  const nodes = commits.map((c) => ({
+    id: c.h,
+    sha: c.h,
+    message: c.msg,
+    branch: c.branch || "main",
+  }));
+
+  const edges = commits.slice(0, -1).map((_, i) => ({
+    from: commits[i].h,
+    to: commits[i + 1].h,
+  }));
+
+  // Map each branch name to the SHA of its tip commit
+  const branchLabels = {};
+  branchLabels[currentBranch] = head;
+
+  const otherBranches = branches.filter((b) => b !== currentBranch);
+  otherBranches.forEach((b, i) => {
+    // Prefer the latest commit that was made on this branch
+    const tip = [...commits].reverse().find((c) => c.branch === b);
+    if (tip) {
+      branchLabels[b] = tip.h;
+    } else {
+      // Fallback: assign to an older commit so the label still appears
+      const idx = Math.max(0, commits.length - 2 - i);
+      if (commits[idx]) branchLabels[b] = commits[idx].h;
+    }
+  });
+
+  return { nodes, edges, head, branches: branchLabels };
+}
+
 export default function PlaygroundPage() {
   const { playgroundTab, setPlaygroundTab, repoState } = useAppStore();
+  const liveGraph = buildLiveGraph(repoState);
 
   return (
     <div className="animate-fade-up">
@@ -58,7 +96,6 @@ export default function PlaygroundPage() {
 
       <Tabs tabs={TABS} activeTab={playgroundTab} onTabChange={setPlaygroundTab} />
 
-      {/* Tab description */}
       <p style={{ color: "var(--muted)", fontSize: 12.5, marginBottom: 18, marginTop: -8 }}>
         {TAB_DESCRIPTIONS[playgroundTab]}
       </p>
@@ -68,50 +105,15 @@ export default function PlaygroundPage() {
         <div className="animate-fade-in">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14, alignItems: "start" }}>
 
-            {/* Left column: terminal → repo state */}
+            {/* Left: terminal → repo state */}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <TerminalEmulator />
               <RepoStatePanel />
             </div>
 
-            {/* Right column: live graph → shortcuts */}
+            {/* Right: live graph → shortcuts */}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
-              {/* Live graph card */}
-              <div className="gitverse-card" style={{
-                padding: 14,
-                borderTop: "2px solid var(--accent)",
-                boxShadow: "0 0 24px rgba(99,102,241,0.07)",
-              }}>
-                <div style={{
-                  fontSize: 10, fontWeight: 700, color: "var(--muted)", marginBottom: 10,
-                  fontFamily: "IBM Plex Mono", textTransform: "uppercase", letterSpacing: "0.07em",
-                  display: "flex", alignItems: "center", gap: 6,
-                }}>
-                  <GitBranch size={11} /> Live Graph
-                  <span style={{ marginLeft: "auto", fontSize: 9, color: "var(--accent)", fontWeight: 600, opacity: 0.7 }}>
-                    ● live
-                  </span>
-                </div>
-                <div style={{ overflow: "hidden" }}>
-                  <CommitGraph scenario="feature_branch" animated showLabels showHead />
-                </div>
-                <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
-                  {[
-                    { branch: "main",         color: "var(--accent)" },
-                    { branch: "feature/auth", color: "var(--cyan)" },
-                  ].map((b) => (
-                    <div key={b.branch} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: b.color, flexShrink: 0 }} />
-                      <span style={{ fontSize: 10, fontFamily: "IBM Plex Mono", color: "var(--muted)" }}>
-                        {b.branch}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Shortcuts card — just below graph */}
+              <LiveGraphCard liveGraph={liveGraph} repoState={repoState} />
               <TipsPanel />
             </div>
           </div>
@@ -121,27 +123,13 @@ export default function PlaygroundPage() {
       {/* ── COMMIT GRAPH ─────────────────────────── */}
       {playgroundTab === "graph" && (
         <div className="animate-fade-in">
-          <div
-            className="gitverse-card"
-            style={{ padding: 20, marginBottom: 14 }}
-          >
-            <CommitGraph scenario="feature_branch" animated showLabels showHead />
-            <div style={{ display: "flex", gap: 16, marginTop: 14, flexWrap: "wrap" }}>
-              {[
-                { branch: "main",         color: "var(--accent)" },
-                { branch: "feature/auth", color: "var(--cyan)" },
-              ].map((b) => (
-                <div key={b.branch} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ width: 9, height: 9, borderRadius: "50%", background: b.color, display: "block" }} />
-                  <span style={{ fontSize: 11, fontFamily: "IBM Plex Mono", color: "var(--muted)" }}>
-                    {b.branch}
-                  </span>
-                </div>
-              ))}
-              <span style={{ fontSize: 11, color: "var(--dim)", fontFamily: "IBM Plex Mono", marginLeft: "auto" }}>
-                ← click any node to inspect
-              </span>
-            </div>
+          <div className="gitverse-card" style={{ padding: 20, marginBottom: 14 }}>
+            {liveGraph ? (
+              <CommitGraph customGraph={liveGraph} animated={false} showLabels showHead />
+            ) : (
+              <CommitGraph scenario="feature_branch" animated showLabels showHead />
+            )}
+            <BranchLegend repoState={repoState} />
           </div>
           <RepoStatePanel expanded />
         </div>
@@ -153,6 +141,82 @@ export default function PlaygroundPage() {
       {playgroundTab === "stash"  && <div className="animate-fade-in"><StashViz /></div>}
       {playgroundTab === "merge"  && <div className="animate-fade-in"><MergeConflictViz /></div>}
       {playgroundTab === "bisect" && <div className="animate-fade-in"><BisectViz /></div>}
+    </div>
+  );
+}
+
+/* ── Live Graph Card ──────────────────────────────────────── */
+function LiveGraphCard({ liveGraph, repoState }) {
+  return (
+    <div className="gitverse-card" style={{
+      padding: 14,
+      borderTop: "2px solid var(--accent)",
+      boxShadow: "0 0 24px rgba(99,102,241,0.07)",
+    }}>
+      <div style={{
+        fontSize: 10, fontWeight: 700, color: "var(--muted)", marginBottom: 10,
+        fontFamily: "IBM Plex Mono", textTransform: "uppercase", letterSpacing: "0.07em",
+        display: "flex", alignItems: "center", gap: 6,
+      }}>
+        <GitBranch size={11} /> Live Graph
+        <span style={{ marginLeft: "auto", fontSize: 9, color: "var(--accent)", fontWeight: 600, opacity: 0.8 }}>
+          ● live
+        </span>
+      </div>
+
+      <div style={{ overflow: "hidden" }}>
+        {liveGraph ? (
+          <CommitGraph
+            customGraph={liveGraph}
+            animated={false}
+            showLabels
+            showHead
+          />
+        ) : (
+          <div style={{ color: "var(--dim)", fontFamily: "IBM Plex Mono", fontSize: 11, padding: "12px 0" }}>
+            No commits yet
+          </div>
+        )}
+      </div>
+
+      <BranchLegend repoState={repoState} compact />
+    </div>
+  );
+}
+
+/* ── Branch Legend ────────────────────────────────────────── */
+function BranchLegend({ repoState, compact = false }) {
+  const { branches, branch: currentBranch } = repoState;
+  return (
+    <div style={{
+      display: "flex", gap: compact ? 10 : 16,
+      marginTop: compact ? 10 : 14,
+      flexWrap: "wrap",
+    }}>
+      {branches.map((b) => (
+        <div key={b} style={{ display: "flex", alignItems: "center", gap: compact ? 5 : 6 }}>
+          <span style={{
+            width: compact ? 7 : 9, height: compact ? 7 : 9,
+            borderRadius: "50%",
+            background: getBranchColor(b),
+            flexShrink: 0,
+            opacity: b === currentBranch ? 1 : 0.65,
+          }} />
+          <span style={{
+            fontSize: compact ? 10 : 11,
+            fontFamily: "IBM Plex Mono",
+            color: b === currentBranch ? getBranchColor(b) : "var(--muted)",
+            fontWeight: b === currentBranch ? 600 : 400,
+          }}>
+            {b === currentBranch ? "✦ " : ""}{b}
+          </span>
+        </div>
+      ))}
+      {!compact && (
+        <span style={{ fontSize: 11, color: "var(--dim)", fontFamily: "IBM Plex Mono", marginLeft: "auto" }}>
+          ← click node to inspect
+        </span>
+      )}
     </div>
   );
 }
@@ -172,7 +236,6 @@ function RepoStatePanel({ expanded = false }) {
         <BarChart3 size={12} /> Repository State
       </div>
 
-      {/* Active branch */}
       <Section label="Branch">
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <span style={{
@@ -185,7 +248,6 @@ function RepoStatePanel({ expanded = false }) {
         </div>
       </Section>
 
-      {/* All branches */}
       <Section label="Branches">
         {repoState.branches.map((b) => (
           <div key={b} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
@@ -205,33 +267,39 @@ function RepoStatePanel({ expanded = false }) {
         ))}
       </Section>
 
-      {/* Recent commits */}
       <Section label="Recent Commits">
-        {repoState.commits.slice(-5).reverse().map((c) => (
+        {repoState.commits.slice(-6).reverse().map((c) => (
           <div key={c.h} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, marginBottom: 4, display: "flex", gap: 7 }}>
             <span style={{ color: "var(--amber)", flexShrink: 0 }}>{c.h.slice(0, 7)}</span>
-            <span style={{ color: "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <span style={{
+              color: c.branch && c.branch !== "main" ? getBranchColor(c.branch) : "var(--muted)",
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
               {c.msg}
             </span>
           </div>
         ))}
       </Section>
 
-      {/* Working state */}
       {repoState.staged.length > 0 && (
         <Section label="Staged">
           {repoState.staged.map((f) => (
-            <div key={f} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, color: "var(--emerald)" }}>
-              + {f}
-            </div>
+            <div key={f} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, color: "var(--emerald)" }}>+ {f}</div>
           ))}
         </Section>
       )}
       {repoState.unstaged.length > 0 && (
         <Section label="Unstaged">
           {repoState.unstaged.map((f) => (
-            <div key={f} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, color: "var(--amber)" }}>
-              ~ {f}
+            <div key={f} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, color: "var(--amber)" }}>~ {f}</div>
+          ))}
+        </Section>
+      )}
+      {(repoState.stash || []).length > 0 && (
+        <Section label="Stash">
+          {repoState.stash.map((s, i) => (
+            <div key={i} style={{ fontFamily: "IBM Plex Mono", fontSize: 11, color: "var(--cyan)" }}>
+              stash@&#123;{i}&#125;: {s.msg}
             </div>
           ))}
         </Section>
@@ -287,6 +355,27 @@ function TipsPanel() {
             </span>
             <span style={{ fontSize: 11, color: "var(--muted)", textAlign: "right" }}>{desc}</span>
           </div>
+        ))}
+      </div>
+
+      {/* Quick reference */}
+      <div style={{
+        marginTop: 14, paddingTop: 12,
+        borderTop: "1px solid var(--border)",
+        fontSize: 10, fontFamily: "IBM Plex Mono",
+        color: "var(--dim)", lineHeight: 1.8,
+      }}>
+        <div style={{ color: "var(--muted)", fontWeight: 700, marginBottom: 4, fontSize: 9, textTransform: "uppercase", letterSpacing: "0.07em" }}>
+          Try these
+        </div>
+        {[
+          'git switch -c feat/x',
+          'git add .',
+          'git commit -m "msg"',
+          'git log --oneline',
+          'git stash',
+        ].map((cmd) => (
+          <div key={cmd} style={{ color: "var(--accent)", opacity: 0.75 }}>{cmd}</div>
         ))}
       </div>
     </div>

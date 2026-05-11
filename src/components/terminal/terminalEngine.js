@@ -406,7 +406,7 @@ ${row("clear",                     "clear terminal output")}
           t.dim(" Date updated: just now"),
         ].join("\n"),
         repoUpdate: {
-          commits: [...repo.commits.slice(0, -1), { h: newHash, msg: newMsg, time: "just now" }],
+          commits: [...repo.commits.slice(0, -1), { h: newHash, msg: newMsg, time: "just now", branch: repo.branch }],
           staged: [],
           head: newHash,
         },
@@ -433,7 +433,7 @@ ${row("clear",                     "clear terminal output")}
 
     const hash = makeHash();
     const newRepo = {
-      commits: [...repo.commits, { h: hash, msg: msg || "(empty commit)", time: "just now" }],
+      commits: [...repo.commits, { h: hash, msg: msg || "(empty commit)", time: "just now", branch: repo.branch }],
       staged: [],
       head: hash,
     };
@@ -749,7 +749,7 @@ ${row("clear",                     "clear terminal output")}
       repoUpdate: {
         commits: [
           ...repo.commits,
-          { h: hash, msg: `Revert: ${repo.commits.at(-1)?.msg || sha}`, time: "just now" },
+          { h: hash, msg: `Revert: ${repo.commits.at(-1)?.msg || sha}`, time: "just now", branch: repo.branch },
         ],
         head: hash,
       },
@@ -786,7 +786,7 @@ ${row("clear",                     "clear terminal output")}
         : t.error("usage: git cherry-pick <commit>"),
       repoUpdate: sha
         ? {
-            commits: [...repo.commits, { h: hash, msg: `Cherry-picked: ${sha}`, time: "just now" }],
+            commits: [...repo.commits, { h: hash, msg: `Cherry-picked: ${sha}`, time: "just now", branch: repo.branch }],
             head: hash,
           }
         : null,

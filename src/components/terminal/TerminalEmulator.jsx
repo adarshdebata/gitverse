@@ -14,20 +14,45 @@ const QUICK_CMDS = [
   "git log --graph",
 ];
 
+/** Tokenize a command string, keeping quoted strings as single tokens */
+function tokenizeCmd(cmd) {
+  const tokens = [];
+  let current = "";
+  let inQuote = null;
+
+  for (let i = 0; i < cmd.length; i++) {
+    const ch = cmd[i];
+    if (inQuote) {
+      current += ch;
+      if (ch === inQuote) inQuote = null;
+    } else if (ch === '"' || ch === "'") {
+      inQuote = ch;
+      current += ch;
+    } else if (ch === " ") {
+      if (current) { tokens.push(current); current = ""; }
+    } else {
+      current += ch;
+    }
+  }
+  if (current) tokens.push(current);
+  return tokens;
+}
+
 function HighlightedCmd({ cmd }) {
-  const parts = cmd.trim().split(/\s+/);
+  const tokens = tokenizeCmd(cmd.trim());
   return (
     <>
-      {parts.map((p, i) => {
+      {tokens.map((p, i) => {
         let color;
-        if (i === 0 && p === "git")   color = "#10b981";
-        else if (i === 0)             color = "#e2e2f4";
-        else if (i === 1)             color = "#10b981";
-        else if (p.startsWith("--")) color = "#6366f1";
-        else if (p.startsWith("-"))  color = "#f59e0b";
-        else if (/^[0-9a-f]{6,}$/.test(p)) color = "#f59e0b";
-        else if (p.startsWith('"') || p.startsWith("'")) color = "#22d3ee";
-        else color = "#e2e2f4";
+        if (i === 0 && p === "git")                        color = "#10b981";
+        else if (i === 0)                                  color = "#e2e2f4";
+        else if (i === 1)                                  color = "#10b981";
+        else if (p.startsWith("--"))                       color = "#6366f1";
+        else if (p.startsWith("-"))                        color = "#f59e0b";
+        else if (/^[0-9a-f]{6,}$/.test(p))                color = "#f59e0b";
+        else if (p.startsWith('"') || p.startsWith("'"))   color = "#22d3ee";
+        else if (p.includes("/"))                          color = "#a855f7";
+        else                                               color = "#e2e2f4";
         return <span key={i} style={{ color }}>{i > 0 ? " " : ""}{p}</span>;
       })}
     </>
