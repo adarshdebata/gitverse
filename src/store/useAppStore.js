@@ -5,17 +5,24 @@ import { persist } from "zustand/middleware";
 const INITIAL_REPO = {
   branch: "main",
   branches: ["main", "feature/auth", "hotfix/login"],
+  // Pre-seeded history that already shows a branch fork so the graph is interesting
   commits: [
-    { h: "a1b2c3d", msg: "Initial commit", time: "3 days ago", branch: "main" },
-    { h: "b2c3d4e", msg: "Add user authentication", time: "2 days ago", branch: "main" },
-    { h: "c3d4e5f", msg: "Implement JWT refresh tokens", time: "1 day ago", branch: "main" },
-    { h: "d4e5f6g", msg: "Fix session expiry bug", time: "4 hours ago", branch: "main" },
+    { h: "a1b2c3d", msg: "Initial commit",          time: "4 days ago",  branch: "main",         parentHash: null        },
+    { h: "b2c3d4e", msg: "Add user model",           time: "3 days ago",  branch: "main",         parentHash: "a1b2c3d"  },
+    { h: "c3d4e5f", msg: "Auth middleware stub",     time: "2 days ago",  branch: "feature/auth", parentHash: "b2c3d4e"  },
+    { h: "d4e5f6g", msg: "Fix readme typo",          time: "2 days ago",  branch: "main",         parentHash: "b2c3d4e"  },
+    { h: "fa12345", msg: "JWT implementation",       time: "1 day ago",   branch: "feature/auth", parentHash: "c3d4e5f"  },
   ],
   staged: [],
   unstaged: ["src/api.js", "tests/api.test.js"],
   untracked: ["src/utils/crypto.js"],
   stash: [],
   head: "d4e5f6g",
+  branchHeads: {
+    main: "d4e5f6g",
+    "feature/auth": "fa12345",
+    "hotfix/login": "b2c3d4e",
+  },
   remotes: ["origin"],
 };
 

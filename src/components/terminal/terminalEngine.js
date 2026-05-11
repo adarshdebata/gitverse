@@ -406,9 +406,13 @@ ${row("clear",                     "clear terminal output")}
           t.dim(" Date updated: just now"),
         ].join("\n"),
         repoUpdate: {
-          commits: [...repo.commits.slice(0, -1), { h: newHash, msg: newMsg, time: "just now", branch: repo.branch }],
+          commits: [
+            ...repo.commits.slice(0, -1),
+            { h: newHash, msg: newMsg, time: "just now", branch: repo.branch, parentHash: repo.commits.at(-2)?.h || null },
+          ],
           staged: [],
           head: newHash,
+          branchHeads: { ...(repo.branchHeads || {}), [repo.branch]: newHash },
         },
       };
     }
@@ -433,9 +437,13 @@ ${row("clear",                     "clear terminal output")}
 
     const hash = makeHash();
     const newRepo = {
-      commits: [...repo.commits, { h: hash, msg: msg || "(empty commit)", time: "just now", branch: repo.branch }],
+      commits: [
+        ...repo.commits,
+        { h: hash, msg: msg || "(empty commit)", time: "just now", branch: repo.branch, parentHash: repo.head },
+      ],
       staged: [],
       head: hash,
+      branchHeads: { ...(repo.branchHeads || {}), [repo.branch]: hash },
     };
 
     return {
@@ -511,7 +519,11 @@ ${row("clear",                     "clear terminal output")}
       const newBranches = repo.branches.includes(name) ? repo.branches : [...repo.branches, name];
       return {
         output: t.success(`Switched to a new branch '${esc(name)}'`),
-        repoUpdate: { branch: name, branches: newBranches },
+        repoUpdate: {
+          branch: name,
+          branches: newBranches,
+          branchHeads: { ...(repo.branchHeads || {}), [name]: repo.head },
+        },
       };
     }
 
@@ -532,9 +544,10 @@ ${row("clear",                     "clear terminal output")}
       };
     }
 
+    const switchHead = (repo.branchHeads || {})[name] || repo.head;
     return {
       output: t.success(`Switched to branch '${esc(name)}'`),
-      repoUpdate: { branch: name },
+      repoUpdate: { branch: name, head: switchHead },
     };
   }
 
@@ -542,13 +555,12 @@ ${row("clear",                     "clear terminal output")}
   if (sub === "checkout") {
     const createFl = parts.includes("-b");
     const name = args.find((a) => !a.startsWith("-"));
+    const checkoutHead = (repo.branchHeads || {})[name] || repo.head;
 
     return {
       output: [
         t.warn(`⚠️  git checkout is overloaded and confusing.`),
-        t.warn(
-          `   Use ${t.success("git switch")} for branches, ${t.success("git restore")} for files.`
-        ),
+        `   Use <span class="t-success">git switch</span> for branches, <span class="t-success">git restore</span> for files.`,
         "",
         name && createFl
           ? t.success(`Switched to a new branch '${esc(name)}'`)
@@ -556,7 +568,11 @@ ${row("clear",                     "clear terminal output")}
             ? t.success(`Switched to branch '${esc(name)}'`)
             : t.error(`error: pathspec '${esc(name)}' did not match`),
       ].join("\n"),
-      repoUpdate: name && repo.branches.includes(name) ? { branch: name } : null,
+      repoUpdate: name && repo.branches.includes(name)
+        ? { branch: name, head: checkoutHead }
+        : name && createFl
+          ? { branch: name, branches: [...repo.branches, name], branchHeads: { ...(repo.branchHeads || {}), [name]: repo.head } }
+          : null,
     };
   }
 
@@ -749,9 +765,10 @@ ${row("clear",                     "clear terminal output")}
       repoUpdate: {
         commits: [
           ...repo.commits,
-          { h: hash, msg: `Revert: ${repo.commits.at(-1)?.msg || sha}`, time: "just now", branch: repo.branch },
+          { h: hash, msg: `Revert: ${repo.commits.at(-1)?.msg || sha}`, time: "just now", branch: repo.branch, parentHash: repo.head },
         ],
         head: hash,
+        branchHeads: { ...(repo.branchHeads || {}), [repo.branch]: hash },
       },
     };
   }
@@ -786,8 +803,9 @@ ${row("clear",                     "clear terminal output")}
         : t.error("usage: git cherry-pick <commit>"),
       repoUpdate: sha
         ? {
-            commits: [...repo.commits, { h: hash, msg: `Cherry-picked: ${sha}`, time: "just now", branch: repo.branch }],
+            commits: [...repo.commits, { h: hash, msg: `Cherry-picked: ${sha}`, time: "just now", branch: repo.branch, parentHash: repo.head }],
             head: hash,
+            branchHeads: { ...(repo.branchHeads || {}), [repo.branch]: hash },
           }
         : null,
     };
@@ -835,6 +853,57 @@ ${row("clear",                     "clear terminal output")}
     };
   }
 
+  // git merge
+  if (sub === "merge") {
+    const target = args.find((a) => !a.startsWith("-"));
+    const abort = parts.includes("--abort");
+
+    if (abort) {
+      return { output: t.warn("Merge aborted. Repository restored to pre-merge state."), repoUpdate: null };
+    }
+
+    if (!target) {
+      return { output: t.error("usage: git merge <branch>"), repoUpdate: null };
+    }
+
+    if (target === repo.branch) {
+      return { output: t.warn(`Already on '${esc(target)}' — nothing to merge.`), repoUpdate: null };
+    }
+
+    if (!repo.branches.includes(target)) {
+      return { output: t.error(`merge: ${esc(target)} — not something we can merge`), repoUpdate: null };
+    }
+
+    const sourceTip =
+      (repo.branchHeads || {})[target] ||
+      [...repo.commits].reverse().find((c) => c.branch === target)?.h;
+
+    if (!sourceTip) {
+      return { output: t.warn(`Nothing to merge from '${esc(target)}' — no commits found.`), repoUpdate: null };
+    }
+
+    const hash = makeHash();
+    const mergeMsg = `Merge branch '${target}'`;
+
+    return {
+      output: [
+        t.info(`Merge made by the 'ort' strategy.`),
+        t.added(` src/api.js | 42 ++++++++++`),
+        t.dim(` 1 file changed, 42 insertions(+)`),
+        `${t.success("[" + repo.branch + " " + hash + "]")} ${esc(mergeMsg)}`,
+        t.dim(`tip: git log --graph --oneline to see the merge topology`),
+      ].join("\n"),
+      repoUpdate: {
+        commits: [
+          ...repo.commits,
+          { h: hash, msg: mergeMsg, time: "just now", branch: repo.branch, parentHash: [repo.head, sourceTip], merge: true },
+        ],
+        head: hash,
+        branchHeads: { ...(repo.branchHeads || {}), [repo.branch]: hash },
+      },
+    };
+  }
+
   // git bisect
   if (sub === "bisect") {
     const bisectSub = args[0];
@@ -857,7 +926,7 @@ ${row("clear",                     "clear terminal output")}
         output: [
           t.info(`Running: ${args.slice(1).join(" ")}`),
           t.dim("... 8 bisect steps ..."),
-          t.success(`${t.hash(repo.commits.at(-2)?.h || "abc123")} is the first bad commit`),
+          `${t.hash(repo.commits.at(-2)?.h || "abc123")} <span class="t-success">is the first bad commit</span>`,
           t.dim(`commit ${repo.commits.at(-2)?.h || "abc123"}`),
           t.dim("Author: Developer <dev@company.com>"),
           t.dim(`\n    ${repo.commits.at(-2)?.msg || "Something changed here"}`),

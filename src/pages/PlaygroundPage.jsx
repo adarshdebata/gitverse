@@ -43,43 +43,51 @@ const TAB_DESCRIPTIONS = {
 };
 
 /**
- * Converts live repoState into a CommitGraph-compatible customGraph object.
- * Each commit carries a `branch` field so the graph correctly color-codes lanes.
+ * Converts live repoState into a CommitGraph-compatible customGraph.
+ * Uses parentHash on each commit to build a real DAG — branch creation,
+ * merge commits and commit flow are all rendered with correct topology.
  */
 function buildLiveGraph(repoState) {
-  const { commits, branches, branch: currentBranch, head } = repoState;
+  const { commits, branches, branch: currentBranch, head, branchHeads } = repoState;
   if (!commits || commits.length === 0) return null;
 
+  const knownHashes = new Set(commits.map((c) => c.h));
+
+  // Nodes carry metadata used by the hover tooltip
   const nodes = commits.map((c) => ({
     id: c.h,
     sha: c.h,
     message: c.msg,
     branch: c.branch || "main",
+    merge: Boolean(c.merge),
+    time: c.time || "",
+    author: "Developer",
   }));
 
-  const edges = commits.slice(0, -1).map((_, i) => ({
-    from: commits[i].h,
-    to: commits[i + 1].h,
-  }));
-
-  // Map each branch name to the SHA of its tip commit
-  const branchLabels = {};
-  branchLabels[currentBranch] = head;
-
-  const otherBranches = branches.filter((b) => b !== currentBranch);
-  otherBranches.forEach((b, i) => {
-    // Prefer the latest commit that was made on this branch
-    const tip = [...commits].reverse().find((c) => c.branch === b);
-    if (tip) {
-      branchLabels[b] = tip.h;
-    } else {
-      // Fallback: assign to an older commit so the label still appears
-      const idx = Math.max(0, commits.length - 2 - i);
-      if (commits[idx]) branchLabels[b] = commits[idx].h;
-    }
+  // Edges derived from parentHash — gives a proper DAG instead of a flat line
+  const edges = [];
+  commits.forEach((c) => {
+    const parents = Array.isArray(c.parentHash)
+      ? c.parentHash
+      : c.parentHash
+        ? [c.parentHash]
+        : [];
+    parents.forEach((ph) => {
+      if (knownHashes.has(ph)) edges.push({ from: ph, to: c.h });
+    });
   });
 
-  return { nodes, edges, head, branches: branchLabels };
+  // Branch label map: use branchHeads from store, then scan commits as fallback
+  const branchLabels = {};
+  branches.forEach((b) => {
+    const tip = (branchHeads || {})[b] || [...commits].reverse().find((c) => c.branch === b)?.h;
+    if (tip && knownHashes.has(tip)) branchLabels[b] = tip;
+  });
+  // Always pin the current branch to the actual HEAD
+  const safeHead = knownHashes.has(head) ? head : commits.at(-1)?.h;
+  if (safeHead) branchLabels[currentBranch] = safeHead;
+
+  return { nodes, edges, head: safeHead, branches: branchLabels };
 }
 
 export default function PlaygroundPage() {
