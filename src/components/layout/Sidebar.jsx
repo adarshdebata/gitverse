@@ -37,7 +37,7 @@ const NAV_SECTIONS = [
 ];
 
 export default function Sidebar() {
-  const { sidebarOpen, theme, toggleTheme } = useAppStore();
+  const { sidebarOpen } = useAppStore();
 
   return (
     <aside
@@ -154,32 +154,14 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div
-        style={{
-          padding: "12px 10px",
-          borderTop: "1px solid var(--border)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 6,
-          flexShrink: 0,
-        }}
-      >
-        {/* Theme toggle */}
-        <button
-          onClick={toggleTheme}
-          className="nav-item"
-          style={{ justifyContent: sidebarOpen ? "flex-start" : "center" }}
-          title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      {sidebarOpen && (
+        <div
+          style={{
+            padding: "10px 14px",
+            borderTop: "1px solid var(--border)",
+            flexShrink: 0,
+          }}
         >
-          <span style={{ fontSize: 16 }}>{theme === "dark" ? "☀️" : "🌙"}</span>
-          {sidebarOpen && (
-            <span className="animate-fade-in" style={{ fontSize: 13 }}>
-              {theme === "dark" ? "Light mode" : "Dark mode"}
-            </span>
-          )}
-        </button>
-
-        {sidebarOpen && (
           <div
             className="animate-fade-in font-mono"
             style={{
@@ -191,8 +173,8 @@ export default function Sidebar() {
           >
             Git 2.44+ · All commands current
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </aside>
   );
 }

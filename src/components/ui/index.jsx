@@ -311,7 +311,7 @@ export function ModesTable({ modes }) {
               <td style={{ fontSize: 12 }}>{m.use || m.result}</td>
               <td>
                 <Badge
-                  variant={m.danger === "high" ? "high" : m.danger === "low" ? "safe" : "medium"}
+                  variant={m.danger === "high" ? "high" : m.danger === "low" ? "easy" : "medium"}
                 >
                   {m.danger}
                 </Badge>

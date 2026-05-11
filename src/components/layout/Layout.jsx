@@ -4,7 +4,7 @@ import Sidebar from "./Sidebar";
 import { useAppStore } from "@/store/useAppStore";
 
 function TopBar() {
-  const { sidebarOpen, toggleSidebar } = useAppStore();
+  const { toggleSidebar, theme, toggleTheme } = useAppStore();
   const navigate = useNavigate();
 
   return (
@@ -79,6 +79,35 @@ function TopBar() {
       >
         git 2.44+
       </div>
+
+      {/* Theme toggle */}
+      <button
+        onClick={toggleTheme}
+        title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+        style={{
+          background: "var(--card)",
+          border: "1px solid var(--border)",
+          borderRadius: 6,
+          cursor: "pointer",
+          color: "var(--muted)",
+          fontSize: 15,
+          padding: "4px 8px",
+          display: "flex",
+          alignItems: "center",
+          transition: "border-color 0.15s ease, color 0.15s ease",
+          flexShrink: 0,
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = "var(--border-b)";
+          e.currentTarget.style.color = "var(--text)";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "var(--border)";
+          e.currentTarget.style.color = "var(--muted)";
+        }}
+      >
+        {theme === "dark" ? "☀️" : "🌙"}
+      </button>
     </header>
   );
 }
@@ -86,15 +115,9 @@ function TopBar() {
 export default function Layout({ children }) {
   const { theme } = useAppStore();
 
-  // Apply theme class to html element
+  // Sync theme class on mount and on change (covers persisted state on first load)
   useEffect(() => {
-    if (theme === "light") {
-      document.documentElement.classList.add("light");
-      document.documentElement.classList.remove("dark");
-    } else {
-      document.documentElement.classList.remove("light");
-      document.documentElement.classList.add("dark");
-    }
+    document.documentElement.classList.toggle("light", theme === "light");
   }, [theme]);
 
   return (

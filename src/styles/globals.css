@@ -60,6 +60,34 @@
 
   /* Sidebar */
   --sidebar-w: 240px;
+
+  /* Aliases used by components */
+  --muted: var(--text-muted);
+  --dim: var(--text-dim);
+}
+
+/* ── Light theme overrides ── */
+html.light {
+  --bg: #f4f4fb;
+  --surface: #ffffff;
+  --card: #f8f8ff;
+  --card-hover: #ededfa;
+  --card-deep: #f0f0f8;
+  --border: #e0dff0;
+  --border-b: #c8c7df;
+  --text: #1e1e2e;
+  --text-muted: #5a5a7a;
+  --text-dim: #9898b8;
+  --muted: #5a5a7a;
+  --dim: #9898b8;
+  --accent-dim: rgba(99, 102, 241, 0.1);
+  --accent-glow: rgba(99, 102, 241, 0.2);
+  --cyan-dim: rgba(34, 211, 238, 0.1);
+  --emerald-dim: rgba(16, 185, 129, 0.1);
+  --amber-dim: rgba(245, 158, 11, 0.1);
+  --rose-dim: rgba(244, 63, 94, 0.1);
+  --purple-dim: rgba(168, 85, 247, 0.1);
+  --orange-dim: rgba(249, 115, 22, 0.1);
 }
 
 html {

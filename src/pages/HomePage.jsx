@@ -97,9 +97,6 @@ export default function HomePage() {
         />
 
         <div style={{ position: "relative", zIndex: 1 }}>
-          <Badge variant="cyan" style={{ marginBottom: 18, display: "inline-flex" }}>
-            The Definitive Visual Git Reference
-          </Badge>
 
           <h1
             className="font-heading"

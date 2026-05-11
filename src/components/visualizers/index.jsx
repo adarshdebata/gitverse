@@ -307,7 +307,7 @@ const RESET_MODE_DATA = {
     working: { label: "Working Tree", affected: false, result: "Unchanged — your files intact" },
     desc: "Undo commit. Changes stay staged — you can immediately re-commit differently.",
     use: "Restructure last commit: split it, reword it, re-stage selectively.",
-    danger: "safe",
+    danger: "easy",
     cmd: "git reset --soft HEAD~1",
   },
   "--mixed": {
@@ -316,7 +316,7 @@ const RESET_MODE_DATA = {
     working: { label: "Working Tree", affected: false, result: "Unchanged — your files intact" },
     desc: "Undo commit and unstage everything. Changes remain in your working directory.",
     use: "Undo commit to re-stage files differently with git add -p.",
-    danger: "safe",
+    danger: "easy",
     cmd: "git reset HEAD~1  # or git reset --mixed HEAD~1",
   },
   "--hard": {
@@ -398,7 +398,7 @@ export function ResetViz() {
       </div>
 
       <Alert
-        type={data.danger === "high" ? "danger" : data.danger === "safe" ? "success" : "warn"}
+        type={data.danger === "high" ? "danger" : data.danger === "easy" ? "success" : "warn"}
         className="mb-3"
         style={{ marginBottom: 14 }}
       >
