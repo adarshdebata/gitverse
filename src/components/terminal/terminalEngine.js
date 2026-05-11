@@ -52,50 +52,65 @@ export function parseCommand(input, repo) {
   }
 
   if (raw === "help" || raw === "git help") {
+    const sec = (t) => `<div class="t-help-sec">${esc(t)}</div>`;
     const row = (cmd, desc) =>
-      `  ${t.success(cmd.padEnd(36))}${t.dim(desc)}`;
-    const sep = () => ``;
+      `<div class="t-help-row"><span>${esc(cmd)}</span><span>${esc(desc)}</span></div>`;
 
     return {
-      output: [
-        t.info("─── GitVerse Terminal · available commands ───"),
-        sep(),
-        t.dim("  STATUS & INFO"),
-        row("git status",              "show working tree status"),
-        row("git log --oneline",       "compact commit log"),
-        row("git log --graph",         "ASCII branch graph"),
-        row("git diff",                "unstaged changes"),
-        row("git diff --staged",       "staged changes"),
-        row("git branch",              "list all branches"),
-        row("git reflog",              "HEAD movement history"),
-        sep(),
-        t.dim("  STAGING & COMMITS"),
-        row("git add .",               "stage all changes"),
-        row("git add -p",              "stage by hunk (interactive)"),
-        row(`git commit -m "msg"`,     "create commit"),
-        row("git commit --amend",      "amend last commit"),
-        sep(),
-        t.dim("  BRANCHES"),
-        row("git switch <branch>",     "switch branch"),
-        row("git switch -c <name>",    "create + switch"),
-        row("git branch -d <name>",    "delete branch"),
-        sep(),
-        t.dim("  UNDO"),
-        row("git reset --soft HEAD~1", "undo commit, keep staged"),
-        row("git reset --hard HEAD~1", "undo + discard all changes"),
-        row("git revert HEAD",         "safe undo (adds new commit)"),
-        row("git restore <file>",      "discard working tree change"),
-        sep(),
-        t.dim("  OTHER"),
-        row("git stash",               "stash current changes"),
-        row("git stash pop",           "apply top stash"),
-        row("git cherry-pick <sha>",   "apply a specific commit"),
-        row("git rebase -i HEAD~3",    "interactive rebase"),
-        row("git bisect start",        "start binary bug hunt"),
-        row("clear",                   "clear terminal output"),
-        sep(),
-        t.dim("  ↑↓ history · Tab autocomplete · Ctrl+C cancel"),
-      ].join("\n"),
+      output: `<div class="t-help">
+<div class="t-help-header">── GitVerse Terminal · available commands ──</div>
+${sec("STATUS & INFO")}
+${row("git status",                "show working tree status")}
+${row("git log --oneline",         "compact commit log")}
+${row("git log --graph",           "ASCII branch graph")}
+${row("git log --stat",            "log with file change stats")}
+${row("git diff",                  "unstaged changes")}
+${row("git diff --staged",         "staged changes")}
+${row("git branch",                "list all branches")}
+${row("git reflog",                "HEAD movement history")}
+${row("git show",                  "show latest commit details")}
+${sec("STAGING & COMMITS")}
+${row("git add .",                 "stage all changes")}
+${row("git add -p",                "stage by hunk (interactive)")}
+${row('git commit -m "msg"',       "create a new commit")}
+${row("git commit --amend",        "amend last commit")}
+${row("git commit --allow-empty",  "create empty commit")}
+${sec("BRANCHES")}
+${row("git switch <branch>",       "switch to existing branch")}
+${row("git switch -c <name>",      "create & switch to new branch")}
+${row("git branch -d <name>",      "delete a branch")}
+${row("git checkout -b <name>",    "legacy: create & switch")}
+${sec("UNDO")}
+${row("git reset --soft HEAD~1",   "undo commit, keep staged")}
+${row("git reset --mixed HEAD~1",  "undo commit, keep unstaged")}
+${row("git reset --hard HEAD~1",   "undo + discard all changes")}
+${row("git revert HEAD",           "safe undo (adds new commit)")}
+${row("git restore <file>",        "discard working tree change")}
+${row("git restore --staged <f>",  "unstage a file")}
+${sec("REMOTE")}
+${row("git fetch",                 "fetch from origin")}
+${row("git pull --rebase",         "pull with rebase (recommended)")}
+${row("git push",                  "push to origin")}
+${row("git push --force-with-lease","safe force-push")}
+${row("git remote -v",             "show remotes")}
+${sec("HISTORY & INSPECTION")}
+${row("git blame <file>",          "line-by-line author history")}
+${row("git cat-file -p HEAD",      "inspect raw git object")}
+${row("git ls-files --stage",      "show staging index")}
+${row("git tag <name>",            "create a tag at HEAD")}
+${row("git config --list",         "show all config settings")}
+${sec("STASH & ADVANCED")}
+${row("git stash",                 "stash current changes")}
+${row("git stash pop",             "apply and drop top stash")}
+${row("git stash list",            "list all stash entries")}
+${row("git cherry-pick <sha>",     "apply a specific commit")}
+${row("git rebase -i HEAD~3",      "interactive rebase")}
+${row("git bisect start",          "start binary bug hunt")}
+${row("git gc",                    "run garbage collection")}
+${row("git fsck",                  "check object connectivity")}
+${row("clear",                     "clear terminal output")}
+<div class="t-help-footer">↑↓ history · Tab autocomplete · Ctrl+C cancel</div>
+</div>`,
       repoUpdate: null,
     };
   }
@@ -436,7 +451,7 @@ export function parseCommand(input, repo) {
   // git branch
   if (sub === "branch") {
     const deleteFl = parts.includes("-d") || parts.includes("-D");
-    const name = args[0] || (deleteFl ? args[0] : null);
+    const name = args.find((a) => !a.startsWith("-")) || null;
 
     if (!name && !deleteFl) {
       // List branches

@@ -66,47 +66,54 @@ export default function PlaygroundPage() {
       {/* ── TERMINAL ─────────────────────────────── */}
       {playgroundTab === "terminal" && (
         <div className="animate-fade-in">
-          {/* Row 1: terminal (left) + graph (right) */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 14, alignItems: "start", marginBottom: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14, alignItems: "start" }}>
 
-            {/* Top-left: terminal emulator */}
-            <TerminalEmulator />
-
-            {/* Top-right: compact live graph */}
-            <div className="gitverse-card" style={{ padding: 14 }}>
-              <div style={{
-                fontSize: 10, fontWeight: 700, color: "var(--muted)", marginBottom: 10,
-                fontFamily: "IBM Plex Mono", textTransform: "uppercase", letterSpacing: "0.07em",
-                display: "flex", alignItems: "center", gap: 6,
-              }}>
-                <GitBranch size={11} /> Live Graph
-                <span style={{ marginLeft: "auto", fontSize: 9, color: "var(--dim)", fontWeight: 400 }}>
-                  auto-updates
-                </span>
-              </div>
-              <div style={{ overflow: "hidden" }}>
-                <CommitGraph scenario="feature_branch" animated showLabels showHead />
-              </div>
-              <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
-                {[
-                  { branch: "main",         color: "var(--accent)" },
-                  { branch: "feature/auth", color: "var(--cyan)" },
-                ].map((b) => (
-                  <div key={b.branch} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                    <span style={{ width: 7, height: 7, borderRadius: "50%", background: b.color, flexShrink: 0 }} />
-                    <span style={{ fontSize: 10, fontFamily: "IBM Plex Mono", color: "var(--muted)" }}>
-                      {b.branch}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            {/* Left column: terminal → repo state */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <TerminalEmulator />
+              <RepoStatePanel />
             </div>
-          </div>
 
-          {/* Row 2: repo state (left) + shortcuts (right) */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 14, alignItems: "start" }}>
-            <RepoStatePanel />
-            <TipsPanel />
+            {/* Right column: live graph → shortcuts */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+              {/* Live graph card */}
+              <div className="gitverse-card" style={{
+                padding: 14,
+                borderTop: "2px solid var(--accent)",
+                boxShadow: "0 0 24px rgba(99,102,241,0.07)",
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, color: "var(--muted)", marginBottom: 10,
+                  fontFamily: "IBM Plex Mono", textTransform: "uppercase", letterSpacing: "0.07em",
+                  display: "flex", alignItems: "center", gap: 6,
+                }}>
+                  <GitBranch size={11} /> Live Graph
+                  <span style={{ marginLeft: "auto", fontSize: 9, color: "var(--accent)", fontWeight: 600, opacity: 0.7 }}>
+                    ● live
+                  </span>
+                </div>
+                <div style={{ overflow: "hidden" }}>
+                  <CommitGraph scenario="feature_branch" animated showLabels showHead />
+                </div>
+                <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
+                  {[
+                    { branch: "main",         color: "var(--accent)" },
+                    { branch: "feature/auth", color: "var(--cyan)" },
+                  ].map((b) => (
+                    <div key={b.branch} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <span style={{ width: 7, height: 7, borderRadius: "50%", background: b.color, flexShrink: 0 }} />
+                      <span style={{ fontSize: 10, fontFamily: "IBM Plex Mono", color: "var(--muted)" }}>
+                        {b.branch}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Shortcuts card — just below graph */}
+              <TipsPanel />
+            </div>
           </div>
         </div>
       )}

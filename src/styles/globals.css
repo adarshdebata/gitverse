@@ -956,6 +956,39 @@ code {
 .t-rem {
   color: #f43f5e;
 }
+.t-added { color: #10b981; }
+.t-removed { color: #f43f5e; }
+
+/* ── Help command output ── */
+.t-help { display: flex; flex-direction: column; }
+.t-help-header { color: #6366f1; font-weight: 700; margin-bottom: 6px; }
+.t-help-sec {
+  color: #f59e0b;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(245,158,11,0.2);
+}
+.t-help-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 8px;
+  padding: 1.5px 0;
+  line-height: 1.65;
+}
+.t-help-row span:first-child { color: #10b981; }
+.t-help-row span:last-child  { color: #6e6e9e; }
+.t-help-footer {
+  color: #3a3a60;
+  margin-top: 10px;
+  padding-top: 8px;
+  font-size: 11px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
 
 /* ================================================================
    GRIDS

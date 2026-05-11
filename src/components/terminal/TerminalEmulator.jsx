@@ -7,12 +7,32 @@ const QUICK_CMDS = [
   "git status",
   "git log --oneline",
   "git branch",
+  "git diff",
   "git diff --staged",
   "git stash list",
   "git reflog",
   "git log --graph",
-  "git ls-files --stage",
 ];
+
+function HighlightedCmd({ cmd }) {
+  const parts = cmd.trim().split(/\s+/);
+  return (
+    <>
+      {parts.map((p, i) => {
+        let color;
+        if (i === 0 && p === "git")   color = "#10b981";
+        else if (i === 0)             color = "#e2e2f4";
+        else if (i === 1)             color = "#10b981";
+        else if (p.startsWith("--")) color = "#6366f1";
+        else if (p.startsWith("-"))  color = "#f59e0b";
+        else if (/^[0-9a-f]{6,}$/.test(p)) color = "#f59e0b";
+        else if (p.startsWith('"') || p.startsWith("'")) color = "#22d3ee";
+        else color = "#e2e2f4";
+        return <span key={i} style={{ color }}>{i > 0 ? " " : ""}{p}</span>;
+      })}
+    </>
+  );
+}
 
 export default function TerminalEmulator() {
   const { repoState, terminalHistory, appendTerminalLine, clearTerminal, resetRepo, updateRepo } =
@@ -178,16 +198,23 @@ export default function TerminalEmulator() {
         onClick={() => inputRef.current?.focus()}
       >
         {terminalHistory.length === 0 && (
-          <div style={{ marginBottom: 8 }}>
-            <div style={{ color: "#10b981", marginBottom: 2 }}>
-              Welcome to GitVerse Terminal.
+          <div style={{ marginBottom: 14, borderLeft: "2px solid #6366f1", paddingLeft: 12 }}>
+            <div style={{ color: "#6366f1", fontWeight: 700, fontSize: 12, marginBottom: 5, letterSpacing: "0.02em" }}>
+              GitVerse Terminal
             </div>
-            <div style={{ color: "#6e6e9e" }}>
-              A simulated Git repository is ready. Type{" "}
-              <span style={{ color: "#6366f1" }}>help</span>
-              {" "}to see commands, or click a quick command above.
+            <div style={{ color: "#3a3a60", fontSize: 11, lineHeight: 1.7 }}>
+              <span style={{ color: "#10b981" }}>$</span>{" "}
+              <span style={{ color: "#4a4a7a" }}>git init &amp;&amp; git commit -m "Initial commit" --allow-empty</span>
             </div>
-            <div style={{ color: "#6e6e9e", marginTop: 2 }}>
+            <div style={{ color: "#4a4a7a", fontSize: 11, lineHeight: 1.7 }}>
+              Initialized empty Git repository · [main (root-commit) <span style={{ color: "#f59e0b" }}>a1b2c3d</span>] Initial commit
+            </div>
+            <div style={{ color: "#6e6e9e", marginTop: 6, fontSize: 11 }}>
+              Sandbox ready — type{" "}
+              <span style={{ color: "#6366f1", fontWeight: 600 }}>help</span>{" "}
+              for all commands, or click a quick-action above.
+            </div>
+            <div style={{ color: "#3a3a60", marginTop: 2, fontSize: 10.5 }}>
               ↑↓ history · Tab autocomplete · Ctrl+C cancel
             </div>
           </div>
@@ -196,14 +223,14 @@ export default function TerminalEmulator() {
         {terminalHistory.map((entry, i) => {
           if (entry.type === "command") {
             return (
-              <div key={i} style={{ marginBottom: 2, display: "flex", alignItems: "center", gap: 4 }}>
+              <div key={i} style={{ marginBottom: 2, display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
                 <span className="t-prompt">dev@gitverse</span>
                 <span className="t-path">~/project</span>
-                <span className="t-prompt">(</span>
+                <span style={{ color: "#6e6e9e" }}>(</span>
                 <span className="t-branch">{entry.branch}</span>
-                <span className="t-prompt">)</span>
-                <span className="t-prompt">$</span>
-                <span style={{ color: "#e2e2f4" }}>{entry.cmd}</span>
+                <span style={{ color: "#6e6e9e" }}>)</span>
+                <span style={{ color: "#10b981", fontWeight: 700 }}>$</span>
+                <HighlightedCmd cmd={entry.cmd} />
               </div>
             );
           }
@@ -211,7 +238,7 @@ export default function TerminalEmulator() {
             return (
               <div
                 key={i}
-                style={{ marginBottom: 8, paddingLeft: 2 }}
+                style={{ marginBottom: 8, paddingLeft: 2, whiteSpace: "pre-wrap" }}
                 dangerouslySetInnerHTML={{ __html: entry.output }}
               />
             );
