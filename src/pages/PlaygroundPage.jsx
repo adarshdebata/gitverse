@@ -244,7 +244,7 @@ function RepoStatePanel({ expanded = false }) {
         <BarChart3 size={12} /> Repository State
       </div>
 
-      <Section label="Branch">
+      <Section label="Current Branch">
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
           <span style={{
             width: 8, height: 8, borderRadius: "50%",

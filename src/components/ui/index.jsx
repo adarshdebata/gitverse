@@ -54,15 +54,26 @@ function escHtml(s) {
 }
 
 function highlightGit(h) {
-  return h
+  // Protect quoted string literals before HTML span injection.
+  // Without this, the string regex would match class attribute values like
+  // "c-cmd", "c-flag" etc. from the first replace, producing malformed HTML
+  // that the browser renders as visible text fragments (c-cmd">git).
+  const strs = [];
+  let s = h.replace(/"([^"]*?)"/g, (_, content) => {
+    strs.push(content);
+    return `\x00${strs.length - 1}\x00`;
+  });
+  s = s
     .replace(/^(git)\s(\S+)/, '<span class="c-cmd">git</span> <span class="c-subcmd">$2</span>')
     .replace(/(\s)(--?[\w-]+=?)(\S*)/g, (_, sp, flag, val) =>
       val ? `${sp}<span class="c-flag">${flag}</span><span class="c-arg">${val}</span>`
            : `${sp}<span class="c-flag">${flag}</span>`)
-    .replace(/"([^"]*?)"/g, '"<span class="c-str">$1</span>"')
     .replace(/\b([0-9a-f]{7,40})\b/g, '<span class="c-hash">$1</span>')
     .replace(/^(error:|fatal:|warning:)(.*)/,
       '<span class="c-err">$1</span><span class="c-comment">$2</span>');
+  return strs.length
+    ? s.replace(/\x00(\d+)\x00/g, (_, i) => `"<span class="c-str">${strs[+i]}</span>"`)
+    : s;
 }
 
 function syntaxHighlight(line) {
