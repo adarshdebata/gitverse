@@ -30,7 +30,7 @@ The centerpiece. A sandboxed Git terminal in your browser where you can experime
 
 The terminal output uses color-coded output just like a real terminal — green for success, red for errors, amber for warnings, cyan for branch names.
 
-> **Screenshot placeholder** — add `docs/screenshots/playground-terminal.png`
+![GitVerse Playground Terminal](./src/assets/screenshots/playground-terminal.png)
 
 ---
 
@@ -48,7 +48,7 @@ Every command you type in the Playground is reflected instantly in a real DAG (D
 
 The graph handles the full topology: create a branch, commit a few times, switch back to `main`, commit, then `git merge feature/x` — the fork point, parallel lanes, and merge node all appear correctly.
 
-> **Screenshot placeholder** — add `docs/screenshots/commit-graph.png`
+![Live Commit Graph Light](./src/assets/screenshots/live-commit-graph-light.png)
 
 ---
 
@@ -66,7 +66,7 @@ Five animated, step-by-step visualizers that walk you through the most misunders
 
 Each step shows the relevant `git` command alongside the visual state change.
 
-> **Screenshot placeholder** — add `docs/screenshots/visualizers.png`
+![Step-through visualizer](./src/assets/screenshots/visualiser.png)
 
 ---
 
@@ -89,7 +89,12 @@ Commands covered: `rebase`, `reset`, `reflog`, `cherry-pick`, `stash`, `bisect`,
 
 You can filter commands by **category** (daily, advanced, legacy, recovery) and **difficulty** (beginner, intermediate, advanced), and search by name or tag.
 
-> **Screenshot placeholder** — add `docs/screenshots/commands-page.png`
+![Command library — browse and filter all 15+ commands](./src/assets/screenshots/Cmd-page-1.png)
+
+![Command detail — in-depth explanation for each command](./src/assets/screenshots/Cmd-page-2.png)
+
+![Syntax reference — all flags, options, and examples](./src/assets/screenshots/Cmd-page-3.png)
+
 
 ---
 
@@ -108,7 +113,7 @@ The mental models behind Git — the ones most tutorials skip over and then wond
 
 Each section is expandable, and code examples show the actual Git commands alongside the concept.
 
-> **Screenshot placeholder** — add `docs/screenshots/fundamentals.png`
+![fundamentals](./src/assets/screenshots/fundamentals.png)
 
 ---
 
@@ -128,7 +133,7 @@ What happens inside `.git/` when you run a command. This section goes one layer 
 | **Hooks** | The pre-commit, commit-msg, pre-push, and other lifecycle hooks — and how to use them |
 | **The Index** | What `.git/index` is and why it exists as a separate layer between working tree and commits |
 
-> **Screenshot placeholder** — add `docs/screenshots/internals.png`
+![internals](./src/assets/screenshots/internals.png)
 
 ---
 
@@ -148,7 +153,7 @@ The page you bookmark for when things go wrong. Step-by-step recovery guides for
 
 Each scenario gives you: what happened, whether it's recoverable, and the exact commands to fix it.
 
-> **Screenshot placeholder** — add `docs/screenshots/recovery.png`
+![recovery](./src/assets/screenshots/recovery.png)
 
 ---
 
@@ -166,7 +171,7 @@ Side-by-side comparisons of the commands developers confuse most — with a clea
 
 Each comparison shows the behavior visually and states a clear recommended default.
 
-> **Screenshot placeholder** — add `docs/screenshots/comparisons.png`
+![comparisons](./src/assets/screenshots/comparisons.png)
 
 ---
 
@@ -212,7 +217,7 @@ npm run deploy     # build + push to GitHub Pages
 
 ## Tech at a Glance
 
-Built with **React 18 + Vite**, client-side only. State managed by **Zustand** (with persistence for theme). Routing via **React Router v7** in hash mode for GitHub Pages compatibility. Styling via **Tailwind CSS** + CSS custom properties for theming. The commit graph is hand-rolled SVG — no graph library dependency.
+Built with **React 18 + Vite**, client-side only. State managed by **Zustand** (with persistence for theme). Routing via **React Router v7** in hash mode for GitHub Pages compatibility. Styling via **Tailwind CSS** + CSS custom properties for theming. The commit graph is rendered with custom SVG, using D3.js for layout calculations and path generation.
 
 Fully static. Deploys anywhere that serves HTML.
 
