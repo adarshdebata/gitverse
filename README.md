@@ -4,7 +4,7 @@
 
 GitVerse is a fully interactive, browser-based Git learning platform. No account required. No backend. Just open it and start learning.
 
-**[Live Demo →](https://adarsh-debata.github.io/gitverse/)**
+**[Live Demo →](https://adarshdebata.github.io/gitverse/)**
 
 ---
 
