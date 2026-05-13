@@ -172,7 +172,7 @@ function LiveGraphCard({ liveGraph, repoState }) {
         </span>
       </div>
 
-      <div style={{ overflow: "hidden" }}>
+      <div style={{ overflowX: "auto" }}>
         {liveGraph ? (
           <CommitGraph
             customGraph={liveGraph}
@@ -221,7 +221,7 @@ function BranchLegend({ repoState, compact = false }) {
         </div>
       ))}
       {!compact && (
-        <span style={{ fontSize: 11, color: "var(--dim)", fontFamily: "IBM Plex Mono", marginLeft: "auto" }}>
+        <span className="branch-legend-hint" style={{ fontSize: 11, color: "var(--dim)", fontFamily: "IBM Plex Mono", marginLeft: "auto" }}>
           ← click node to inspect
         </span>
       )}

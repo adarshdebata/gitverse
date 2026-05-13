@@ -93,6 +93,7 @@ html.light {
 html {
   scroll-behavior: smooth;
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -1500,6 +1501,8 @@ html.light { --card-h: var(--card-hover); }
   overflow-x: auto;
   scrollbar-width: none;
   flex-wrap: nowrap;
+  min-width: 0;
+  max-width: 100%;
 }
 .tab-list::-webkit-scrollbar { display: none; }
 
@@ -1571,10 +1574,13 @@ html.light .terminal-root .terminal-bar {
   font-size: 12.5px;
   line-height: 1.75;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 240px;
   max-height: 400px;
   color: #e2e2f4;
   cursor: text;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .terminal-root .terminal-body::-webkit-scrollbar { width: 4px; }
 .terminal-root .terminal-body::-webkit-scrollbar-track { background: transparent; }
@@ -1727,6 +1733,10 @@ html.light code {
   gap: 14px;
   align-items: start;
 }
+/* Prevent grid blowout: grid items must not exceed their track */
+.playground-terminal-grid > * {
+  min-width: 0;
+}
 @media (max-width: 900px) {
   .playground-terminal-grid {
     grid-template-columns: 1fr;
@@ -1738,6 +1748,7 @@ html.light code {
   padding: 32px 32px 60px;
   max-width: 1200px;
   margin: 0 auto;
+  overflow-x: hidden;
 }
 @media (max-width: 768px) {
   .content-pad { padding: 24px 20px 48px; }
@@ -1974,4 +1985,70 @@ html.light code {
   border-color: var(--accent);
   color: var(--accent);
   font-weight: 600;
+}
+
+/* ================================================================
+   RESPONSIVE — PLAYGROUND PAGE MOBILE FIXES
+================================================================ */
+
+/* Smaller tab pills so more are visible before horizontal scroll */
+@media (max-width: 640px) {
+  .tab-item {
+    padding: 5px 8px;
+    font-size: 11px;
+    gap: 3px;
+  }
+
+  /* Quick-bar: single scrollable row instead of multi-row wrap */
+  .terminal-root .terminal-quick-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .terminal-root .terminal-quick-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Terminal body: cap height so it doesn't fill the entire screen */
+  .terminal-root .terminal-body {
+    max-height: 280px;
+    min-height: 160px;
+  }
+
+  /* help row: tighter first column on narrow screens */
+  .t-help-row {
+    grid-template-columns: 165px 1fr;
+  }
+
+  /* Mouse-only hint hidden on touch / mobile */
+  .branch-legend-hint {
+    display: none;
+  }
+}
+
+/* Phones: stack help rows vertically and hide verbose prompt parts */
+@media (max-width: 480px) {
+  .t-help-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 3px;
+  }
+  .t-help-row span:last-child {
+    padding-left: 10px;
+    font-size: 10px;
+  }
+
+  /* Shorten terminal prompt: hide hostname on very small screens */
+  .terminal-prompt-user {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  /* Hide path segment too on tiny screens */
+  .terminal-prompt-path {
+    display: none;
+  }
 }

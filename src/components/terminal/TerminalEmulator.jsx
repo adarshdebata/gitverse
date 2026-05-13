@@ -157,6 +157,10 @@ export default function TerminalEmulator() {
             color: "var(--muted)",
             marginLeft: 10,
             flex: 1,
+            minWidth: 0,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
           GitVerse Terminal
@@ -272,9 +276,9 @@ export default function TerminalEmulator() {
         })}
 
         {/* Live input line */}
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <span className="t-prompt">dev@gitverse</span>
-          <span className="t-path">~/project</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+          <span className="t-prompt terminal-prompt-user">dev@gitverse</span>
+          <span className="t-path terminal-prompt-path">~/project</span>
           <span className="t-prompt">(</span>
           <span className="t-branch">{repoState.branch}</span>
           <span className="t-prompt">)</span>
