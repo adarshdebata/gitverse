@@ -223,13 +223,31 @@ Fully static. Deploys anywhere that serves HTML.
 
 ---
 
+## Mobile & Responsive Support
+
+The Playground page is fully responsive down to Android and small-phone widths. Specific changes made:
+
+- **Viewport overflow fixed** — `html { overflow-x: hidden }` added alongside `body`, closing the browser-level horizontal scroll that caused content to appear cut off on the left on Android Chrome.
+- **Grid blowout prevention** — `min-width: 0` on `.playground-terminal-grid` grid items stops intrinsic content width (long terminal output, wide branch names) from forcing the grid — and the whole page — wider than the viewport.
+- **Terminal body contained** — `overflow-x: hidden`, `word-break: break-word`, and `overflow-wrap: break-word` prevent long git command output lines from leaking outside the terminal card.
+- **Quick-action bar** — switches from multi-row wrap to a single horizontally-scrollable row on mobile (`≤ 640px`), saving vertical space.
+- **Terminal body height** — capped at `280px` on mobile (down from `400px`) so the terminal doesn't dominate the screen.
+- **Tab bar** — smaller pill padding (`5px 8px`, `11px` font) on mobile so more tabs are visible before horizontal scroll.
+- **`help` command output** — the two-column grid (`220px 1fr`) collapses to a vertical flex stack at `≤ 480px` so command names and descriptions don't overlap on narrow screens.
+- **Terminal prompt** — `dev@gitverse` hostname hidden at `≤ 480px` and `~/project` path hidden at `≤ 360px`, freeing space for the actual input field.
+- **Live Graph card** — changed from `overflow: hidden` to `overflow-x: auto` so the commit graph SVG can be scrolled horizontally rather than clipped.
+- **Content-pad** — `overflow-x: hidden` added to the main page wrapper as a final containment layer.
+
+The commit graph is still best experienced on a wider screen; on phones it renders correctly but is compact.
+
+---
+
 ## What It Doesn't Do
 
 Honest list:
 
 - **No real Git execution** — the terminal is a simulator. `git push` doesn't push anywhere. This is intentional.
 - **No user accounts or progress tracking** — nothing is saved server-side because there is no server.
-- **No mobile layout** — a commit graph on a 375px screen is not useful. Desktop only.
 
 ---
 
