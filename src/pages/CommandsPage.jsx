@@ -116,13 +116,7 @@ export default function CommandsPage() {
               </span>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 14,
-              }}
-            >
+            <div className="page-grid-2" style={{ gap: 14 }}>
               {cmds.map((cmd) => (
                 <CommandCard
                   key={cmd.id}

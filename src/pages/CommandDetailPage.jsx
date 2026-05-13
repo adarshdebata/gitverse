@@ -214,14 +214,7 @@ export default function CommandDetailPage() {
           </InfoCard>
 
           {/* When to use / not */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 14,
-              marginBottom: 16,
-            }}
-          >
+          <div className="page-grid-2" style={{ gap: 14, marginBottom: 16 }}>
             <div
               className="gitverse-card"
               style={{ padding: 16, borderColor: "rgba(16,185,129,0.3)" }}
@@ -376,13 +369,7 @@ export default function CommandDetailPage() {
               >
                 Before / After State
               </h3>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                }}
-              >
+              <div className="page-grid-2" style={{ gap: 12 }}>
                 <div className="gitverse-card" style={{ padding: 14 }}>
                   <div
                     style={{

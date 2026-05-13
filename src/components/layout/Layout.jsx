@@ -57,7 +57,7 @@ function TopBar() {
       </button>
 
       {/* Quick nav bar */}
-      <div style={{ display: "flex", gap: 4, flex: 1 }}>
+      <div className="topbar-nav" style={{ display: "flex", gap: 4, flex: 1 }}>
         {[
           { label: "Commands", path: "/commands" },
           { label: "Internals", path: "/internals" },
@@ -76,7 +76,7 @@ function TopBar() {
       </div>
 
       {/* Git version selector */}
-      <div ref={versionRef} style={{ position: "relative", flexShrink: 0 }}>
+      <div ref={versionRef} className="topbar-version-btn" style={{ position: "relative", flexShrink: 0 }}>
         <button
           onClick={() => setVersionOpen(v => !v)}
           style={{
@@ -156,7 +156,7 @@ function TopBar() {
 }
 
 export default function Layout({ children }) {
-  const { theme } = useAppStore();
+  const { theme, sidebarOpen, toggleSidebar } = useAppStore();
 
   // Sync theme class on mount and on change (covers persisted state on first load)
   useEffect(() => {
@@ -165,6 +165,12 @@ export default function Layout({ children }) {
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--bg)" }}>
+      {/* Mobile backdrop — closes sidebar when tapped */}
+      <div
+        className={`sidebar-backdrop${sidebarOpen ? " visible" : ""}`}
+        onClick={toggleSidebar}
+      />
+
       <Sidebar />
 
       {/* Right panel */}
@@ -181,7 +187,7 @@ export default function Layout({ children }) {
 
         {/* Main content area */}
         <main style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
-          <div style={{ padding: "32px 32px 60px", maxWidth: 1200, margin: "0 auto" }}>
+          <div className="content-pad">
             {children}
           </div>
         </main>

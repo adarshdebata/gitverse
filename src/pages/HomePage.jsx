@@ -70,11 +70,9 @@ export default function HomePage() {
 
       {/* ── HERO (full-bleed, breaks out of content padding) ── */}
       <div
+        className="hero-breakout"
         style={{
           position: "relative",
-          margin: "-32px -32px 0",
-          padding: "64px 32px 56px",
-          marginBottom: 48,
           borderBottom: "1px solid var(--border)",
           overflow: "hidden",
         }}
@@ -100,15 +98,7 @@ export default function HomePage() {
         }} />
 
         {/* Two-column grid */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 56,
-          alignItems: "center",
-          maxWidth: 1136,
-          margin: "0 auto",
-        }}>
+        <div className="hero-grid" style={{ position: "relative", zIndex: 1 }}>
           {/* Left: Headline + subtitle + CTAs */}
           <div>
             <div style={{
@@ -149,7 +139,7 @@ export default function HomePage() {
               who want to understand Git deeply — not just use it.
             </p>
 
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+            <div className="hero-ctas">
               <button
                 className="btn btn-primary"
                 style={{
@@ -193,20 +183,16 @@ export default function HomePage() {
           </div>
 
           {/* Right: 2×2 stat cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div className="hero-stats-grid">
             {STATS.map((s, i) => (
               <div
                 key={i}
-                className="gitverse-card"
-                style={{
-                  padding: "22px 20px",
-                  textAlign: "center",
-                  borderTop: `2px solid ${s.color}`,
-                }}
+                className="gitverse-card stat-card"
+                style={{ borderTop: `2px solid ${s.color}` }}
               >
                 <div
                   className="font-heading"
-                  style={{ fontSize: 36, fontWeight: 900, color: s.color, lineHeight: 1, marginBottom: 6 }}
+                  style={{ fontSize: "clamp(22px, 4.5vw, 36px)", fontWeight: 900, color: s.color, lineHeight: 1, marginBottom: 6 }}
                 >
                   {s.n}
                 </div>
@@ -254,7 +240,7 @@ export default function HomePage() {
                 </span>
               </div>
             ))}
-            <span style={{
+            <span className="hover-hint" style={{
               fontSize: 11, color: "var(--dim)",
               fontFamily: "IBM Plex Mono", marginLeft: "auto",
             }}>
@@ -273,7 +259,7 @@ export default function HomePage() {
           The commands that trip up even experienced engineers — fully explained.
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12 }}>
+        <div className="featured-grid">
           {featured.map((cmd) => (
             <div
               key={cmd.id}
@@ -317,7 +303,7 @@ export default function HomePage() {
           Structured journeys from fundamentals to mastery.
         </p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+        <div className="paths-grid">
           {PATHS.map((p) => (
             <div
               key={p.path}

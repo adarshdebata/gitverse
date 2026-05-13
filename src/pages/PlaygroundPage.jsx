@@ -111,7 +111,7 @@ export default function PlaygroundPage() {
       {/* ── TERMINAL ─────────────────────────────── */}
       {playgroundTab === "terminal" && (
         <div className="animate-fade-in">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 14, alignItems: "start" }}>
+          <div className="playground-terminal-grid">
 
             {/* Left: terminal → repo state */}
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>

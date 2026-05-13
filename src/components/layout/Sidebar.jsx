@@ -9,6 +9,7 @@ import {
   BarChart3,
   GitBranch,
   LifeBuoy,
+  X,
 } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -48,10 +49,17 @@ const NAV_SECTIONS = [
 ];
 
 export default function Sidebar() {
-  const { sidebarOpen } = useAppStore();
+  const { sidebarOpen, toggleSidebar } = useAppStore();
+
+  const closeOnMobile = () => {
+    if (window.matchMedia("(max-width: 640px)").matches && sidebarOpen) {
+      toggleSidebar();
+    }
+  };
 
   return (
     <aside
+      className={`sidebar-responsive${sidebarOpen ? " sidebar-mobile-open" : ""}`}
       style={{
         width: sidebarOpen ? 230 : 58,
         minWidth: sidebarOpen ? 230 : 58,
@@ -115,6 +123,14 @@ export default function Sidebar() {
             </div>
           </div>
         )}
+
+        <button
+          className="sidebar-close-btn"
+          onClick={toggleSidebar}
+          title="Close menu"
+        >
+          <X size={16} />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -145,6 +161,7 @@ export default function Sidebar() {
                   end={item.to === "/"}
                   className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
                   title={!sidebarOpen ? item.label : undefined}
+                  onClick={closeOnMobile}
                 >
                   <span style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
                     <IconComp size={16} />

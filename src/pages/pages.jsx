@@ -44,7 +44,7 @@ export function FundamentalsPage() {
           Version control is a system that records changes to files over time, enabling you to
           recall specific versions later and understand who changed what, when, and why.
         </p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+        <div className="page-grid-2" style={{ gap: 12, marginBottom: 12 }}>
           <InfoCard icon={<Building2 size={18} />} title="Before Git (CVS, SVN)" accentColor="var(--rose)">
             Centralized server holds all history. Developers check out snapshots. Requires network
             for most operations. Single point of failure. Lock-based workflow. Offline work
@@ -270,7 +270,7 @@ a1b2c3d4...  (lightweight: just a SHA)
 # Annotated tags point to a tag object, not a commit`}
             style={{ marginBottom: 16 }}
           />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div className="page-grid-2" style={{ gap: 14 }}>
             {[
               {
                 type: "Branch Refs",
@@ -376,7 +376,7 @@ git fsck
 git gc --dry-run`}
             style={{ marginBottom: 16 }}
           />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div className="page-grid-2" style={{ gap: 14 }}>
             <InfoCard icon={<Database size={18} />} title="Loose Objects" accentColor="var(--cyan)">
               Each object is a separate compressed file in .git/objects/ab/cdef... Created
               immediately on git add/commit. Git auto-packs when count exceeds ~6700.
@@ -519,7 +519,7 @@ export function WorkflowsPage() {
             usually better.
           </Alert>
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
+            className="page-grid-2" style={{ gap: 14, marginBottom: 20 }}
           >
             <div>
               <h3 className="font-heading" style={{ fontWeight: 700, marginBottom: 12 }}>
@@ -615,7 +615,7 @@ git flow release finish v2.0.0    # merges to main + develop, creates tag`}
             Amazon. Everyone integrates to main at least daily. Feature flags gate incomplete work.
           </Alert>
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
+            className="page-grid-2" style={{ gap: 14, marginBottom: 20 }}
           >
             <InfoCard icon={<Zap size={18} />} title="Core Principles" accentColor="var(--emerald)">
               • Short-lived branches (&lt;1 day ideally)
@@ -823,7 +823,7 @@ npm install --save-dev semantic-release
             challenges: large history, slow clones, noisy git log, partial ownership.
           </Alert>
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
+            className="page-grid-2" style={{ gap: 14, marginBottom: 20 }}
           >
             <div>
               <h3 className="font-heading" style={{ fontWeight: 700, marginBottom: 10 }}>
@@ -876,7 +876,7 @@ packages/shared/          @architecture @frontend-team
             <strong> Always use --force-with-lease instead.</strong>
           </Alert>
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}
+            className="page-grid-2" style={{ gap: 14, marginBottom: 20 }}
           >
             <InfoCard icon={<Ban size={18} />} title="--force (dangerous)" accentColor="var(--rose)">
               Overwrites remote regardless of its current state. If a teammate pushed after your
